@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const expressJwt = require('express-jwt');
+const { expressjwt: expressJwt } = require('express-jwt');
 const LocalStrategy = require('passport-local').Strategy;
 const passwordHash = require('password-hash');
 const accessController = require('./access-controller');
@@ -101,7 +101,7 @@ module.exports.logout = function (req, res, next) {
   }).catch(next);
 };
 
-module.exports.checkAccessToken = expressJwt({secret: 'server secret'});
+module.exports.checkAccessToken = expressJwt({secret: 'server secret', algorithms: ['HS256']});
 
 module.exports.authenticate = passport.authenticate('local', {session: false});
 

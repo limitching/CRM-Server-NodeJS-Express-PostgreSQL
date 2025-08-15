@@ -32,7 +32,7 @@ class MailModel extends Model {
 
   loadLetters(limit) {
     return this.sequelizeModel
-      .findAll({order: '"created_at"', limit: limit})
+      .findAll({order: [['created_at', 'ASC']], limit: limit})
       .then((letters) => {
         _.forEach(letters, letter => letter.to = JSON.parse(letter.to));
         return letters;

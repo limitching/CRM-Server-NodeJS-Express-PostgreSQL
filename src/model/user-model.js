@@ -94,7 +94,7 @@ class UserModel extends ContainerModel {
       .findOne({
         attributes: fields,
         where: {
-          $or: [
+          [Sequelize.Op.or]: [
             {username: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('username')), usernameOrEmail)},
             {email: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('email')), usernameOrEmail)}
           ]
@@ -139,17 +139,17 @@ class UserModel extends ContainerModel {
       let username = user.username.toLowerCase();
       let email = user.email.toLowerCase();
       if (username || email) {
-        let filter = {$or: []};
+        let filter = {[Sequelize.Op.or]: []};
         if (user.id) {
-          filter.id = {$ne: user.id};
+          filter.id = {[Sequelize.Op.ne]: user.id};
         }
         if (username) {
-          filter.$or.push({username: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('username')), username)});
-          filter.$or.push({email: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('email')), username)});
+          filter[Sequelize.Op.or].push({username: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('username')), username)});
+          filter[Sequelize.Op.or].push({email: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('email')), username)});
         }
         if (email) {
-          filter.$or.push({username: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('username')), email)});
-          filter.$or.push({email: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('email')), email)});
+          filter[Sequelize.Op.or].push({username: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('username')), email)});
+          filter[Sequelize.Op.or].push({email: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('username')), email)});
         }
         this.sequelizeModel
           .findOne({attributes: ['id'], where: filter, transaction: transaction})
