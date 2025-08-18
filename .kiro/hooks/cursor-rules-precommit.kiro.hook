@@ -1,0 +1,33 @@
+{
+  "enabled": true,
+  "name": "Cursor Rules Pre-Commit Check",
+  "description": "Ensures all code changes comply with cursor rules and project standards before commit",
+  "version": "1",
+  "metadata": {
+    "timestamp": "2025-01-19T12:00:00Z",
+    "context": {
+      "project_type": "crm_server_nodejs",
+      "cursor_rules": [
+        "update-docs-on-code-change",
+        "security-scan-precommit"
+      ]
+    }
+  },
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "**/*.js",
+      "**/*.ts",
+      "**/*.json",
+      "**/*.md",
+      "src/**/*",
+      "frontend/**/*",
+      "package.json",
+      "package-lock.json"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "# Cursor Rules Pre-Commit Compliance Check\n\nBefore committing, ensure your changes comply with all cursor rules and project standards:\n\n## 1. Documentation Standards Check\n- [ ] Have you updated relevant documentation (README.md, API docs, etc.)?\n- [ ] Are new features properly documented?\n- [ ] Have you updated any configuration examples?\n- [ ] Are database model changes documented?\n\n## 2. Code Style & Standards Check\n- [ ] Are you using ES6+ JavaScript features?\n- [ ] Does the code follow RESTful API design principles?\n- [ ] Is proper error handling implemented?\n- [ ] Are you using async/await for asynchronous operations?\n- [ ] Does the code follow existing project structure and naming conventions?\n\n## 3. Security & Best Practices Check\n- [ ] Are there any hardcoded sensitive information?\n- [ ] Are you using environment variables for configuration?\n- [ ] Is proper authentication and authorization implemented?\n- [ ] Are you following security best practices for CRM data handling?\n\n## 4. Development Workflow Check\n- [ ] Have you tested your changes thoroughly?\n- [ ] Are environment configuration examples updated if needed?\n- [ ] Are database migrations properly documented?\n- [ ] Is frontend and backend documentation synchronized?\n\n## 5. Cursor Rules Compliance\n- [ ] Have you triggered the 'update-docs-on-code-change' rule?\n- [ ] Have you triggered the 'security-scan-precommit' rule?\n- [ ] Are all .kiro hooks satisfied?\n\n**IMPORTANT**: You must complete ALL checks above before proceeding with the commit. If any check fails, fix the issues first.\n\nAfter completing all checks, provide a summary of your compliance status and any actions taken."
+  }
+}
