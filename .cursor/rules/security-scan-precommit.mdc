@@ -1,0 +1,57 @@
+# Security Pre-Commit Scanner Rule
+
+## Overview
+This rule enforces security scanning before commits to prevent sensitive information from being committed to the repository.
+
+## Reference
+This rule works in conjunction with the `.kiro/hooks/security-scan-precommit.kiro.hook` file, which provides detailed scanning instructions and patterns.
+
+## Security Requirements
+
+### What to Scan For
+- API keys, tokens, or credentials in source code
+- Private keys or sensitive credentials
+- Encryption keys or certificates
+- Authentication tokens or session IDs
+- Passwords or secrets in configuration files
+- Database connection credentials
+- Mail server credentials
+- Hardcoded internal URLs or endpoints
+- Environment variable exposure
+- SQL injection vulnerabilities
+
+### Security Standards
+- Follow OWASP security guidelines
+- Ensure customer data protection
+- Maintain API endpoint security
+- Implement proper database access controls
+- Secure email service configuration
+- Proper session management
+- Input validation and sanitization
+
+### File Patterns to Monitor
+- JavaScript/TypeScript files (*.js, *.ts)
+- Configuration files (*.json, .env*)
+- Documentation (*.md)
+- Database files (*.sql)
+- Infrastructure files (Dockerfile, docker-compose.yml)
+- Package files (package.json, package-lock.json)
+
+## Implementation
+When this rule is triggered, it will:
+1. Scan changed files for security vulnerabilities
+2. Highlight specific security risks found
+3. Suggest secure alternatives
+4. Recommend security best practices
+5. Confirm code security or suggest improvements
+
+## Best Practices
+- Use environment variables for sensitive configuration
+- Implement proper secret management
+- Follow the principle of least privilege
+- Regular security audits and updates
+- Secure coding practices for all team members
+description: Security pre-commit scanning rule for CRM project
+globs: ["**/*"]
+alwaysApply: true
+---

@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "name": "Update Documentation on Code Change",
+  "description": "Monitors changes to Node.js source files and other relevant files, then prompts to update documentation in README.md or docs directory to keep documentation in sync with code",
+  "version": "1",
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "**/*.js",
+      "**/*.json",
+      "src/**/*",
+      "package.json",
+      "package-lock.json",
+      "database.js",
+      "env.example.js",
+      "Procfile",
+      "frontend/**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "I noticed changes to source code or configuration files. Please analyze these changes and update the relevant documentation in either README.md or the docs directory to ensure documentation stays in sync with the codebase. Consider:\n\n1. If new API endpoints or controllers were added, update their documentation\n2. If existing functionality changed, update related documentation\n3. If database models or schemas changed, update data model documentation\n4. If environment variables or configuration options changed, update setup instructions\n5. If new features were added to the CRM system, document their usage\n6. Check if API documentation needs to be updated to reflect endpoint changes\n7. Ensure database migration notes are documented if schema changes occurred\n\nPlease make targeted documentation updates that accurately reflect the recent code changes while maintaining clear and comprehensive documentation for this CRM system."
+  }
+}

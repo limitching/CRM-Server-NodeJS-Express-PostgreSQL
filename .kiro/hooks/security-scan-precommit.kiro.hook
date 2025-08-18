@@ -1,0 +1,38 @@
+{
+  "enabled": true,
+  "name": "Security Pre-Commit Scanner",
+  "description": "Scans changed files for potential security issues like API keys, credentials, tokens, and other sensitive information before commit",
+  "version": "1",
+  "metadata": {
+    "timestamp": "2025-01-19T12:00:00Z",
+    "context": {
+      "project_type": "crm_server_nodejs",
+      "security_standards": [
+        "OWASP",
+        "data_protection",
+        "api_security"
+      ]
+    }
+  },
+  "when": {
+    "type": "userTriggered",
+    "patterns": [
+      "*.js",
+      "*.ts",
+      "*.json",
+      "*.md",
+      "*.sh",
+      "*.sql",
+      "Dockerfile",
+      "docker-compose.yml",
+      "config.*",
+      ".env*",
+      "package.json",
+      "package-lock.json"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "# Security Pre-Commit Scan\n\nReview the changed files for potential security issues in this Node.js CRM server project. Focus on:\n\n1. API keys, tokens, or credentials in source code\n2. Private keys or sensitive credentials\n3. Encryption keys or certificates\n4. Authentication tokens or session IDs\n5. Passwords or secrets in configuration files\n6. Database connection credentials\n7. Mail server credentials\n8. Hardcoded internal URLs or endpoints\n9. Environment variable exposure\n10. SQL injection vulnerabilities\n\nFor each security issue found:\n1. Highlight the specific line and security risk\n2. Suggest a secure alternative approach (e.g., environment variables, secret management)\n3. Recommend security best practices aligned with CRM software requirements\n\nPay special attention to:\n- OWASP security guidelines\n- Customer data protection requirements\n- API endpoint security\n- Database access controls\n- Email service security\n- Session management\n- Input validation and sanitization\n\nIf no security issues are found, confirm that the code appears secure and suggest any proactive security improvements that align with enterprise CRM software standards."
+  }
+}

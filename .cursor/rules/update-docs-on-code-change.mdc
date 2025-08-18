@@ -1,0 +1,48 @@
+---
+description: CRM Server Node.js Express PostgreSQL - Project Rules
+globs: ["**/*"]
+alwaysApply: false
+---
+
+# CRM Server Node.js Express PostgreSQL - Project Rules
+
+## Project Overview
+This is a CRM server built with Node.js, Express, and PostgreSQL. The project includes both backend API services and a frontend interface.
+
+## Code Style & Standards
+- Use ES6+ JavaScript features
+- Follow RESTful API design principles
+- Implement proper error handling and validation
+- Use async/await for asynchronous operations
+- Follow the existing project structure and naming conventions
+
+## Documentation Standards
+- Keep documentation in sync with code changes
+- Update README.md when adding new features or changing existing functionality
+- Document API endpoints, database models, and configuration options
+- Use clear and comprehensive descriptions for CRM system features
+
+## .kiro Hooks Integration
+This project uses .kiro hooks to automatically prompt for documentation updates when code changes occur. The hooks are located in `.kiro/hooks/` and will trigger when:
+- JavaScript source files are modified
+- Configuration files change
+- Package dependencies are updated
+- Database models or schemas are altered
+
+When prompted by .kiro hooks, ensure you:
+1. Analyze the code changes thoroughly
+2. Update relevant documentation sections
+3. Maintain consistency with existing documentation style
+4. Consider the impact on API users and system administrators
+
+## Development Workflow
+- Test changes thoroughly before committing
+- Update environment configuration examples if needed
+- Ensure database migrations are properly documented
+- Keep frontend and backend documentation synchronized
+
+## Security & Best Practices
+- Never commit sensitive information like API keys or passwords
+- Use environment variables for configuration
+- Implement proper authentication and authorization
+- Follow security best practices for CRM data handling
