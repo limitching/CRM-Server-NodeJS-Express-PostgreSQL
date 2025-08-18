@@ -5,7 +5,7 @@ import {
   Paper,
   Container,
 } from '@mui/material';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();

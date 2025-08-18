@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './store';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
@@ -40,53 +43,57 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <AuthProvider>
-          <Router>
-            <Routes>
-              {/* Public routes */}
-              <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-              <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
-              <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
-              <Route path={ROUTES.ACTIVATE_ACCOUNT} element={<ActivateAccountPage />} />
-              
-              {/* Protected routes */}
-              <Route
-                path={ROUTES.LANDING}
-                element={
-                  <ProtectedRoute>
-                    <LandingPage />
-                  </ProtectedRoute>
-                }
-              />
-              
-              <Route
-                path={ROUTES.DASHBOARD}
-                element={
-                  <ProtectedRoute>
-                    <DashboardPage />
-                  </ProtectedRoute>
-                }
-              />
-              
-              {/* Default redirect */}
-              <Route
-                path={ROUTES.HOME}
-                element={<Navigate to={ROUTES.DASHBOARD} replace />}
-              />
-              
-              {/* Catch all - redirect to dashboard */}
-              <Route
-                path="*"
-                element={<Navigate to={ROUTES.DASHBOARD} replace />}
-              />
-            </Routes>
-          </Router>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <AuthProvider>
+              <Router>
+                <Routes>
+                  {/* Public routes */}
+                  <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+                  <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+                  <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
+                  <Route path={ROUTES.ACTIVATE_ACCOUNT} element={<ActivateAccountPage />} />
+                  
+                  {/* Protected routes */}
+                  <Route
+                    path={ROUTES.LANDING}
+                    element={
+                      <ProtectedRoute>
+                        <LandingPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  
+                  <Route
+                    path={ROUTES.DASHBOARD}
+                    element={
+                      <ProtectedRoute>
+                        <DashboardPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  
+                  {/* Default redirect */}
+                  <Route
+                    path={ROUTES.HOME}
+                    element={<Navigate to={ROUTES.DASHBOARD} replace />}
+                  />
+                  
+                  {/* Catch all - redirect to dashboard */}
+                  <Route
+                    path="*"
+                    element={<Navigate to={ROUTES.DASHBOARD} replace />}
+                  />
+                </Routes>
+              </Router>
+            </AuthProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 

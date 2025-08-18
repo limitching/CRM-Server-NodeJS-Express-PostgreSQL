@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { authService } from '../services/authService';
 import type {
@@ -12,6 +12,7 @@ import type {
 } from '../types/auth';
 import type { User } from '../types';
 import { STORAGE_KEYS } from '../constants';
+import { AuthContext } from './AuthContextTypes';
 
 // Initial state
 const initialState: AuthState = {
@@ -74,8 +75,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-// Create context
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
 
 // Provider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -211,11 +211,4 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Hook to use auth context
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+

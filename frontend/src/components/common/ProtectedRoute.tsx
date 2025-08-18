@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { ROUTES } from '../../constants';
 import { CircularProgress, Box } from '@mui/material';
 
@@ -37,7 +37,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Check role requirements if specified
   if (requiredRoles.length > 0 && user) {
-    const userRoles = user.roles.map((role: any) => role.name);
+    const userRoles = user.roles.map((role) => role.name);
     const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
     
     if (!hasRequiredRole) {

@@ -62,7 +62,7 @@ authApi.interceptors.response.use(
 export const authService = {
   // Login user
   async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
-    const response = await authApi.post<any>(
+    const response = await authApi.post<{ token: string; userData: User }>(
       API_CONFIG.ENDPOINTS.AUTH.LOGIN,
       credentials
     );
@@ -96,8 +96,8 @@ export const authService = {
   async logout(): Promise<void> {
     try {
       await authApi.post(API_CONFIG.ENDPOINTS.AUTH.LOGOUT);
-    } catch (error) {
-      console.error('Logout error:', error);
+    } catch {
+      // Logout error handled silently
     } finally {
       // Always clear local storage
       localStorage.removeItem('auth_token');
@@ -165,7 +165,7 @@ export const authService = {
         headers: { Authorization: `Bearer ${token}` }
       });
       return response.data.success && response.data.data.valid;
-    } catch (error) {
+    } catch {
       return false;
     }
   },
