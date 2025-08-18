@@ -1,7 +1,7 @@
 'use strict';
 
-const _ = require('lodash');
-const Cache = require('./cache');
+import _ from 'lodash';
+import Cache from './cache.js';
 
 class AccessCache {
   constructor() {
@@ -61,4 +61,4 @@ class AccessCache {
   }
 }
 
-module.exports = new AccessCache();
+export default new AccessCache();

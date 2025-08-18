@@ -1,25 +1,24 @@
-const model = require('../model');
+import * as model from '../model/index.js';
 const reminderModel = model.reminderModel;
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const HTTP_CODES = core.HTTP_CODE;
-const _ = require('lodash');
+import { controllerUtils, HTTP_CODE } from '../core/index.js';
+const HTTP_CODES = HTTP_CODE;
+import _ from 'lodash';
 
-const save = async function (reminder) {
+const saveReminder = async function (reminder) {
   return await reminderModel.save(reminder);
 };
 
-module.exports.loadAll = function (req, res, next) {
+export const loadAll = function (req, res, next) {
   reminderModel
     .loadAll()
     .then(reminders => res.json(reminders))
     .catch(next);
 };
 
-module.exports.save = function (req, res, next) {
+export const save = function (req, res, next) {
   let reminder = controllerUtils.extractObjectFromRequest(req);
   if (reminder) {
-    save(reminder)
+    saveReminder(reminder)
       .then(reminder => res.status(HTTP_CODES.OK).send(reminder))
       .catch(next);
   } else {
@@ -27,7 +26,7 @@ module.exports.save = function (req, res, next) {
   }
 }
 
-module.exports.remove = function (req, res, next) {
+export const remove = function (req, res, next) {
   let id = controllerUtils.extractIdFromRequest(req);
   if (id) {
     reminderModel

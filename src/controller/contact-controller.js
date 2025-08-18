@@ -1,26 +1,25 @@
-const model = require('../model');
+import * as model from '../model/index.js';
 const contactModel = model.contactModel;
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const HTTP_CODES = core.HTTP_CODE;
-const _ = require('lodash');
+import { controllerUtils, HTTP_CODE } from '../core/index.js';
+const HTTP_CODES = HTTP_CODE;
+import _ from 'lodash';
 
-const save = async function (contact) {
+const saveContact = async function (contact) {
   return await contactModel.save(contact);
 };
 
-module.exports.loadAll = function (req, res, next) {
+export const loadAll = function (req, res, next) {
   contactModel
     .loadAll()
     .then(contacts => res.json(contacts))
     .catch(next);
 };
 
-module.exports.save = function (req, res, next) {
+export const save = function (req, res, next) {
   let contact = controllerUtils.extractObjectFromRequest(req); 
   if (contact) {
     contact.accounts = !contact.accounts ? [] : contact.accounts;
-    save(contact)
+    saveContact(contact)
       .then(contact => res.status(HTTP_CODES.OK).send(contact))
       .catch(next);
   } else {
@@ -28,7 +27,7 @@ module.exports.save = function (req, res, next) {
   }
 }
 
-module.exports.remove = function (req, res, next) {
+export const remove = function (req, res, next) {
   let id = controllerUtils.extractIdFromRequest(req);
   if (id) {
     contactModel

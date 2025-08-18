@@ -1,7 +1,7 @@
 'use strict';
 
-const _ = require('lodash');
-const database = require('../../database');
+import _ from 'lodash';
+import database from '../../database.js';
 const sequelize = database.sequelize;
 
 let associationsMetadataByEntityName = {};
@@ -222,7 +222,7 @@ const updateChildren = function (object, associations, transaction) {
   return Promise.all(promises);
 };
 
-const saveWithChildren = function (entity, object, transaction, fields) {
+const saveWithChildrenInternal = function (entity, object, transaction, fields) {
   let model = getModel(entity);
   fields = fields || modelMetadataByEntityName[model.name].fields;
 
@@ -260,7 +260,7 @@ const saveWithChildren = function (entity, object, transaction, fields) {
   });
 };
 
-module.exports.registerModel = function (model, fields, sortOrderField) {
+export const registerModel = function (model, fields, sortOrderField) {
   if (sortOrderField && _.indexOf(fields, sortOrderField) < 0) {
     fields = _.clone(fields);
     fields.push(sortOrderField);
@@ -268,12 +268,12 @@ module.exports.registerModel = function (model, fields, sortOrderField) {
   modelMetadataByEntityName[model.name] = {model: model, fields: fields, sortOrderField: sortOrderField};
 };
 
-module.exports.unregisterModel = function (model) {
+export const unregisterModel = function (model) {
   delete modelMetadataByEntityName[model.name];
   delete associationsMetadataByEntityName[model.name];
 };
 
-module.exports.registerAssociation = function (childAssociation, childFields, onLoadHandler, onSaveHandler) {
+export const registerAssociation = function (childAssociation, childFields, onLoadHandler, onSaveHandler) {
   let targetEntityName = childAssociation.target.name;
   let sourceEntityName = childAssociation.source.name;
   let targetModelMetadata = modelMetadataByEntityName[targetEntityName];
@@ -298,16 +298,16 @@ module.exports.registerAssociation = function (childAssociation, childFields, on
   });
 };
 
-module.exports.saveWithChildren = function (entity, object, transaction, fields) {
+export const saveWithChildren = function (entity, object, transaction, fields) {
   object = getSequelizeInstanceValues(object);
-  return !transaction ? sequelize.transaction(localTransaction => saveWithChildren(entity, object,
-    localTransaction, fields)) : saveWithChildren(entity, object, transaction, fields);
+  return !transaction ? sequelize.transaction(localTransaction => saveWithChildrenInternal(entity, object,
+    localTransaction, fields)) : saveWithChildrenInternal(entity, object, transaction, fields);
 };
 
-module.exports.loadWithChildren = loadWithChildren;
+export { loadWithChildren };
 
-module.exports.removeWithChildrenByFilter = removeWithChildrenByFilter;
+export { removeWithChildrenByFilter };
 
-module.exports.prepareForClient = prepareForClient;
+export { prepareForClient };
 
-module.exports.getSequelizeInstanceValues = getSequelizeInstanceValues;
+export { getSequelizeInstanceValues };

@@ -1,13 +1,10 @@
 'use strict';
 
-const _ = require('lodash');
-const messageFactory = require('./message-factory');
-const mailer = require('./mailer');
-const env = require('../env');
-
-const model = require('../model');
-const mailModel = model.mailModel;
-const userModel = model.userModel;
+import _ from 'lodash';
+import * as messageFactory from './message-factory.js';
+import { sendMail as mailerSendMail } from './mailer.js';
+import * as env from '../env.js';
+import { mailModel, userModel } from '../model/index.js';
 
 const createLetterObject = function (recipients, subject, textBody, htmlBody) {
   return {
@@ -22,22 +19,22 @@ const createLetterObject = function (recipients, subject, textBody, htmlBody) {
 const sendMessage = function (recipients, subject, textBody, htmlBody) {
   return mailModel
     .saveLetters([createLetterObject(recipients, subject, textBody, htmlBody)])
-    .then(() => mailer.sendMail());
+    .then(() => mailerSendMail());
 };
 
-module.exports.sendActivationMessage = function (user, key) {
+export const sendActivationMessage = function (user, key) {
   if (user.email) {
     sendMessage([user.email], 'Account activation', null, messageFactory.buildActivationMessage(user, key));
   }
 };
 
-module.exports.sendResetPasswordMessage = function (user, key) {
+export const sendResetPasswordMessage = function (user, key) {
   if (user.email) {
     sendMessage([user.email], 'Password Reset', null, messageFactory.buildResetPasswordMessage(user, key));
   }
 };
 
-module.exports.createAccountExpiredMessages = function (users, transaction) {
+export const createAccountExpiredMessages = function (users, transaction) {
   let messages = [];
   _.forEach(users, (user => {
     if (user.email) {
@@ -49,7 +46,7 @@ module.exports.createAccountExpiredMessages = function (users, transaction) {
   return mailModel.saveLetters(messages, transaction);
 };
 
-module.exports.sendNotifyMessages = function (users, opportunityName) {
+export const sendNotifyMessages = function (users, opportunityName) {
    userModel
     .find({id: { $in: users }})
     .then(users => {
@@ -61,12 +58,12 @@ module.exports.sendNotifyMessages = function (users, opportunityName) {
     }).catch(error => console.log(error));
 };
 
-module.exports.sendReminderMessage = function (user, opportunityName) {
+export const sendReminderMessage = function (user, opportunityName) {
   if (user.email) {
     sendMessage([user.email], 'Reminder Email', null, '<span>Reminder for the "'+opportunityName+'" opportunity.</span>');
   }
 };
 
-module.exports.sendMail = function () {
-  mailer.sendMail();
+export const sendMail = function () {
+  mailerSendMail();
 };

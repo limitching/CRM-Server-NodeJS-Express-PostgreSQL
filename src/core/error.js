@@ -1,7 +1,6 @@
 'use strict';
 
-const constants = require('./constants');
-const HTTP_CODE = constants.HTTP_CODE;
+import { HTTP_CODE } from './constants.js';
 
 class RequestError extends Error {
   constructor(status, message) {
@@ -22,7 +21,7 @@ class ValidationError extends BadRequestError {
   }
 }
 
-module.exports = {
+export {
   ValidationError,
   BadRequestError
 };

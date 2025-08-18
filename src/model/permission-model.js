@@ -1,10 +1,9 @@
 'use strict';
 
-const database = require('../database');
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-const Model = core.Model;
+import { Model } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
   type: {type: Sequelize.STRING, unique: true, allowNull: false},
@@ -24,4 +23,4 @@ class PermissionModel extends Model {
   }
 }
 
-module.exports = new PermissionModel();
+export default new PermissionModel();

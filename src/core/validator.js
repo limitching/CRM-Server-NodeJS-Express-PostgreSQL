@@ -1,11 +1,12 @@
 'use strict';
 
-const _ = require('lodash');
-const phoneNumberUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
-const constants = require('./constants');
+import _ from 'lodash';
+import pkg from 'google-libphonenumber';
+const { PhoneNumberUtil } = pkg;
+import * as constants from './constants.js';
+import { ValidationError } from './error.js';
 
-const error = require('./error');
-const ValidationError = error.ValidationError;
+const phoneNumberUtil = PhoneNumberUtil.getInstance();
 
 const INCORRECT_VALUE_ERROR_MESSAGE = 'Incorrect value';
 
@@ -89,7 +90,7 @@ const handleValidationResult = function (res) {
   }
 };
 
-module.exports.checkPassword = function (password) {
+export const checkPassword = function (password) {
   let res = checkRequired(constants.VALIDATOR_TYPE.required, password, null, 'Password is required');
   res = !res ?
     checkMinLength(constants.VALIDATOR_TYPE.min_length, password, 8, 'Password should be at least 8 characters') : res;
@@ -99,17 +100,17 @@ module.exports.checkPassword = function (password) {
   handleValidationResult(res);
 };
 
-module.exports.checkMinLen = function (value, minLen, errorMessage) {
+export const checkMinLen = function (value, minLen, errorMessage) {
   let res = checkMinLength(constants.VALIDATOR_TYPE.min_length, value, minLen, errorMessage);
   handleValidationResult(res);
 };
 
-module.exports.checkEmail = function (value) {
+export const checkEmail = function (value) {
   let res = checkEmailFormat(value, undefined, undefined, {type: constants.VALIDATOR_TYPE.email_format});
   handleValidationResult(res);
 };
 
-module.exports.checkPhoneNumber = function (value) {
+export const checkPhoneNumber = function (value) {
   let res = checkPhoneNumberFormat(value);
   handleValidationResult(res);
 };

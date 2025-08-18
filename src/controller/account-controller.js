@@ -1,38 +1,38 @@
-const model = require('../model');
+import * as model from '../model/index.js';
 const accountModel = model.accountModel;
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const HTTP_CODES = core.HTTP_CODE;
-const _ = require('lodash');
-const env = require('../env');
+import { controllerUtils, HTTP_CODE } from '../core/index.js';
+const HTTP_CODES = HTTP_CODE;
+import _ from 'lodash';
+import * as env from '../env.js';
 
-var fs = require('graceful-fs');
+import fs from 'graceful-fs';
 const aws = {
   accessKeyId: env.AWS.ACCESS_KEY_ID,
   secretAccessKey: env.AWS.SECRET_ACCESS_KEY
 }
 const BUCKET_NAME = env.AWS.BUCKET_NAME;
-var s3Client = require('s3').createClient({
+import s3 from 's3';
+var s3Client = s3.createClient({
   s3Options: aws
 });
 
-const save = async function (account) {
+const saveAccount = async function (account) {
   return await accountModel.save(account);
 };
 
 
-module.exports.loadAll = function (req, res, next) {
+export const loadAll = function (req, res, next) {
   accountModel
     .loadAll()
     .then(accounts => res.json(accounts))
     .catch(next);
 };
 
-module.exports.save = function (req, res, next) {
+export const save = function (req, res, next) {
   let account = controllerUtils.extractObjectFromRequest(req);
   if (account) {
     account.contacts = !account.contacts ? [] : account.contacts;
-    save(account)
+    saveAccount(account)
       .then(account => res.status(HTTP_CODES.OK).send(account))
       .catch(next);
   } else {
@@ -40,7 +40,7 @@ module.exports.save = function (req, res, next) {
   }
 }
 
-module.exports.remove = function (req, res, next) {
+export const remove = function (req, res, next) {
   let id = controllerUtils.extractIdFromRequest(req);
   if (id) {
     accountModel
@@ -52,17 +52,17 @@ module.exports.remove = function (req, res, next) {
   }
 };
 
-module.exports.upload = function(req, res, next) {
+export const upload = function(req, res, next) {
   const data = req.body.base64;
   const tempLocation = '/document/' + Date.now() + '.txt';
-  upload(data, tempLocation, (documentUrl) => {
+  uploadToS3(data, tempLocation, (documentUrl) => {
     res.status(200).json({
       url: documentUrl
     });
   });
 };
 
-const upload = (data, filepath, cb) => {
+const uploadToS3 = (data, filepath, cb) => {
   data = data.replace(/^data:image\/jpeg;base64,/, "");
   data = data.replace(/^data:image\/png;base64,/, "");
 
@@ -89,7 +89,7 @@ const upload = (data, filepath, cb) => {
   uploader.on('end', function () {
     console.log('upload end')
     fs.unlinkSync('public' + filepath);
-    const documentUrl = require('s3').getPublicUrl(BUCKET_NAME, uploadKey);
+    const documentUrl = s3.getPublicUrl(BUCKET_NAME, uploadKey);
     cb(documentUrl);
   });
 }

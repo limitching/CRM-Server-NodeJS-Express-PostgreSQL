@@ -1,25 +1,24 @@
-const model = require('../model');
+import * as model from '../model/index.js';
 const socialNetworkModel = model.socialNetworkModel;
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const HTTP_CODES = core.HTTP_CODE;
-const _ = require('lodash');
+import { controllerUtils, HTTP_CODE } from '../core/index.js';
+const HTTP_CODES = HTTP_CODE;
+import _ from 'lodash';
 
-const save = async function (socialNetwork) {
+const saveSocialNetwork = async function (socialNetwork) {
   return await socialNetworkModel.save(socialNetwork);
 };
 
-module.exports.loadAll = function (req, res, next) {
+export const loadAll = function (req, res, next) {
   socialNetworkModel
     .loadAll()
     .then(socialNetworks => res.json(socialNetworks))
     .catch(next);
 };
 
-module.exports.save = function (req, res, next) {
+export const save = function (req, res, next) {
   let socialNetwork = controllerUtils.extractObjectFromRequest(req);
   if (socialNetwork) {
-    save(socialNetwork)
+    saveSocialNetwork(socialNetwork)
       .then(socialNetwork => res.status(HTTP_CODES.OK).send(socialNetwork))
       .catch(next);
   } else {
@@ -27,7 +26,7 @@ module.exports.save = function (req, res, next) {
   }
 }
 
-module.exports.remove = function (req, res, next) {
+export const remove = function (req, res, next) {
   let id = controllerUtils.extractIdFromRequest(req);
   if (id) {
     socialNetworkModel
@@ -39,7 +38,7 @@ module.exports.remove = function (req, res, next) {
   }
 };
 
-module.exports.getById = function (req, res, next) {
+export const getById = function (req, res, next) {
   let id = req.params.id;
   if (id) {
     socialNetworkModel

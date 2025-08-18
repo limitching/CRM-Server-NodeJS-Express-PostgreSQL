@@ -1,10 +1,11 @@
 'use strict';
 
-const _ = require('lodash');
-const env = require('../env');
+import _ from 'lodash';
+import * as env from '../env.js';
 
-const core = require('../core');
-const HTTP_CODES = core.HTTP_CODE;
+import { HTTP_CODE } from '../core/index.js';
+
+const HTTP_CODES = HTTP_CODE;
 
 const ERROR_CODES = [
   HTTP_CODES.BAD_REQUEST,
@@ -13,7 +14,7 @@ const ERROR_CODES = [
   HTTP_CODES.FORBIDDEN
 ];
 
-module.exports.addHeaders = function (req, res, next) {
+export const addHeaders = function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', env.FRONTEND_URL);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
@@ -30,7 +31,7 @@ module.exports.addHeaders = function (req, res, next) {
   }
 };
 
-module.exports.errorHandler = function(err, req, res, next) {
+export const errorHandler = function(err, req, res, next) {
   if(err.status && _.indexOf(ERROR_CODES, err.status) >= 0){
     res.status(err.status).send(err.message);
   } else {

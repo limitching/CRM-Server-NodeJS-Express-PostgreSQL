@@ -1,12 +1,11 @@
 'use strict';
 
-const _ = require('lodash');
+import _ from 'lodash';
 
-const database = require('../database');
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-const Model = core.Model;
+import { Model } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
   from: {type: Sequelize.STRING, allowNull: false},
@@ -40,4 +39,4 @@ class MailModel extends Model {
   };
 }
 
-module.exports = new MailModel();
+export default new MailModel();

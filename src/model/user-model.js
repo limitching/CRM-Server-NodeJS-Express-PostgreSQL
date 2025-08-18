@@ -1,18 +1,16 @@
 'use strict';
 
-const _ = require('lodash');
-const passwordHash = require('password-hash');
-const passwordGenerator = require('generate-password');
-const roleModel = require('./role-model');
+import _ from 'lodash';
+import passwordHash from 'password-hash';
+import passwordGenerator from 'generate-password';
+import roleModel from './role-model.js';
 
-const database = require('../database');
+import database from '../database.js';
 const sequelize = database.sequelize;
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-const validator = core.validator;
-const ContainerModel = core.ContainerModel;
-const ValidationError = core.error.ValidationError;
+import { validator, ContainerModel, error } from '../core/index.js';
+const ValidationError = error.ValidationError;
 
 const MODEL_ATTRIBUTES = {
   username: {
@@ -233,4 +231,4 @@ class UserModel extends ContainerModel {
   }
 }
 
-module.exports = new UserModel();
+export default new UserModel();

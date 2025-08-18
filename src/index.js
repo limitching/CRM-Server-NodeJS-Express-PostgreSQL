@@ -1,7 +1,6 @@
 'use strict';
 
-const app = require('./app');
-const server = app.server;
+import { server } from './app/index.js';
 
 (function start() {
   server.start().catch(error => console.error(error));

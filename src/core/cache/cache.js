@@ -1,7 +1,7 @@
 'use strict';
 
-const _ = require('lodash');
-const dalUtils = require('../dal/dal-utils');
+import _ from 'lodash';
+import * as dalUtils from '../dal/dal-utils.js';
 
 class Cache {
   constructor(keyGenerator) {
@@ -57,4 +57,4 @@ class Cache {
   }
 }
 
-module.exports = Cache;
+export default Cache;

@@ -1,11 +1,8 @@
 'use strict';
 
-const _ = require('lodash');
-const dalUtils = require('./dal-utils');
-
-const database = require('../../database');
-const sequelize = database.sequelize;
-const Sequelize = database.Sequelize;
+import _ from 'lodash';
+import * as dalUtils from './dal-utils.js';
+import { sequelize, Sequelize } from '../../database.js';
 
 class Model {
 
@@ -113,4 +110,4 @@ class Model {
   }
 }
 
-module.exports = Model;
+export default Model;

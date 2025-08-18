@@ -1,14 +1,14 @@
 'use strict';
 
-module.exports.extractObjectFromRequest = function (req) {
+export const extractObjectFromRequest = function (req) {
   return req.body ? req.body.object : null;
 };
 
-module.exports.extractIdFromRequest = function (req) {
+export const extractIdFromRequest = function (req) {
   return req.body ? req.body.id : null;
 };
 
-module.exports.responseHandler = function (res, success, message, data) {
+export const responseHandler = function (res, success, message, data) {
   res.json({
       success: success,
       message: message,
@@ -16,7 +16,7 @@ module.exports.responseHandler = function (res, success, message, data) {
   });
 };
 
-module.exports.formatDate = function (date) {
+export const formatDate = function (date) {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),

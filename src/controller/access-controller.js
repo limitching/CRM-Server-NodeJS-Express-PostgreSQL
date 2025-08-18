@@ -1,17 +1,14 @@
 'use strict';
 
-const _ = require('lodash');
+import _ from 'lodash';
 
-const model = require('../model');
+import * as model from '../model/index.js';
 const roleModel = model.roleModel;
 const permissionModel = model.permissionModel;
 const userModel = model.userModel;
 const accessTokenModel = model.accessTokenModel;
 
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const constants = core.constants;
-const accessCache = core.accessCache;
+import { controllerUtils, constants, accessCache } from '../core/index.js';
 
 let defaultRole = null;
 
@@ -34,7 +31,7 @@ const sendInsufficientRightsError = function (res) {
   res.status(403).send('Insufficient rights to perform the operation');
 };
 
-module.exports.init = function () {
+export const init = function () {
   return permissionModel
     .loadAll()
     .then(permissions => {
@@ -56,16 +53,16 @@ module.exports.init = function () {
     });
 };
 
-module.exports.getAuthData = getAuthData;
+export { getAuthData };
 
-module.exports.checkPermissions = function (permissions) {
+export const checkPermissions = function (permissions) {
   return (req, res, next) => {
     !hasPermissions(getAuthData(req), permissions) ? sendInsufficientRightsError(res) : next();
   }
 };
 
-module.exports.hasPermissions = hasPermissions;
+export { hasPermissions };
 
-module.exports.getPermissionsForRoles = function (roles) {
+export const getPermissionsForRoles = function (roles) {
   return accessCache.getPermissionsForRoles(roles);
 };

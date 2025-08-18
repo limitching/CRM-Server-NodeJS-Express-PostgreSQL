@@ -1,13 +1,11 @@
 'use strict';
 
-const database = require('../database');
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-// const Model = core.Model;
-const ContainerModel = core.ContainerModel;
-const contactModel = require('./contact-model');
-const accountModel = require('./account-model');
+import { ContainerModel } from '../core/index.js';
+import contactModel from './contact-model.js';
+import accountModel from './account-model.js';
 
 const MODEL_ATTRIBUTES = {
   contact_id: {type: Sequelize.UUID, allowNull: false},
@@ -23,5 +21,5 @@ class ContactAccountsModel extends ContainerModel {
   }
 }
 
-module.exports = new ContactAccountsModel();
+export default new ContactAccountsModel();
 

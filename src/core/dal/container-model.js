@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const Model = require('./model');
-const dalUtils = require('./dal-utils');
+import Model from "./model.js";
+import * as dalUtils from "./dal-utils.js";
 
 class ContainerModel extends Model {
   constructor(modelName, fields) {
@@ -12,7 +12,7 @@ class ContainerModel extends Model {
     this.sequelizeModel[fieldName] = this.sequelizeModel.belongsToMany(targetModel, {
       as: fieldName,
       through: through,
-      foreignKey: foreignKey
+      foreignKey: foreignKey,
     });
     dalUtils.registerAssociation(this.getAssociation(fieldName), childFields);
   }
@@ -21,7 +21,7 @@ class ContainerModel extends Model {
     this.sequelizeModel[fieldName] = this.sequelizeModel.belongsToMany(targetModel, {
       as: fieldName,
       through: through,
-      foreignKey: foreignKey
+      foreignKey: foreignKey,
     });
     dalUtils.registerAssociation(this.getAssociation(fieldName), childFields);
   }
@@ -32,17 +32,15 @@ class ContainerModel extends Model {
 
   find(filter, transaction) {
     return dalUtils.loadWithChildren(this.sequelizeModel, filter, transaction);
-  };
+  }
 
   findOne() {
-    throw new Error('This functionality does not supported');
+    throw new Error("This functionality does not supported");
   }
 
   findById(id, transaction) {
-    return this
-      .find({id: id}, transaction)
-      .then(objects => objects && objects.length > 0 ? objects[0] : null);
-  };
+    return this.find({ id: id }, transaction).then((objects) => (objects && objects.length > 0 ? objects[0] : null));
+  }
 
   save(object, transaction) {
     return dalUtils.saveWithChildren(this.sequelizeModel, object, transaction);
@@ -53,4 +51,4 @@ class ContainerModel extends Model {
   }
 }
 
-module.exports = ContainerModel;
+export default ContainerModel;

@@ -1,20 +1,18 @@
 'use strict';
 
-const _ = require('lodash');
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const { expressjwt: expressJwt } = require('express-jwt');
-const LocalStrategy = require('passport-local').Strategy;
-const passwordHash = require('password-hash');
-const accessController = require('./access-controller');
+import _ from 'lodash';
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+import { expressjwt as expressJwt } from 'express-jwt';
+import { Strategy as LocalStrategy } from 'passport-local';
+import passwordHash from 'password-hash';
+import * as accessController from './access-controller.js';
 
-const model = require('../model');
+import * as model from '../model/index.js';
 const userModel = model.userModel;
 const accessTokenModel = model.accessTokenModel;
 
-const core = require('../core');
-const accessCache = core.accessCache;
-const HTTP_CODE = core.HTTP_CODE;
+import { accessCache, HTTP_CODE } from '../core/index.js';
 
 const AUTH_HEADER_PREFIX = 'Bearer ';
 
@@ -33,7 +31,7 @@ const extractAccessToken = function (req) {
 };
 
 
-module.exports.generateToken = function (req, res, next) {
+export const generateToken = function (req, res, next) {
   req.token = jwt.sign({
       id: req.user.id,
       permissions: req.user.permissions
@@ -41,7 +39,7 @@ module.exports.generateToken = function (req, res, next) {
   accessTokenModel.saveUserSession(req.user.id, req.token).then(() => next()).catch(next);
 };
 
-module.exports.sendAuthData = function (req, res) {
+export const sendAuthData = function (req, res) {
   let roles = _.map(accessCache.getRoles(), (role) => {
     return {
       id: role.id,
@@ -63,7 +61,7 @@ module.exports.sendAuthData = function (req, res) {
     })
 };
 
-module.exports.checkAccessTokenValid = function (req, res, next) {
+export const checkAccessTokenValid = function (req, res, next) {
   if (req.user) {
     let accessToken = extractAccessToken(req);
     if (accessToken) {
@@ -78,7 +76,7 @@ module.exports.checkAccessTokenValid = function (req, res, next) {
   }
 };
 
-module.exports.serialize = function (req, res, next) {
+export const serialize = function (req, res, next) {
   req.user = {
     id: req.user.id,
     permissions: accessController.getPermissionsForRoles(req.user.roles),
@@ -86,7 +84,7 @@ module.exports.serialize = function (req, res, next) {
   next();
 };
 
-module.exports.localStrategy = new LocalStrategy({usernameField: 'username', passwordField: 'password'},
+export const localStrategy = new LocalStrategy({usernameField: 'username', passwordField: 'password'},
   (username, password, done) => {
     userModel.loadAuthDataByByUsernameOrEmail(username).then((authData) => {
       authData && authData.active && passwordHash.verify(password, authData.password) ?
@@ -94,14 +92,14 @@ module.exports.localStrategy = new LocalStrategy({usernameField: 'username', pas
     }).catch(done);
   });
 
-module.exports.logout = function (req, res, next) {
+export const logout = function (req, res, next) {
   accessTokenModel.clearUserSession(req.user.id).then(() => {
     req.logout();
     res.sendStatus(HTTP_CODE.OK);
   }).catch(next);
 };
 
-module.exports.checkAccessToken = expressJwt({secret: 'server secret', algorithms: ['HS256']});
+export const checkAccessToken = expressJwt({secret: 'server secret', algorithms: ['HS256']});
 
-module.exports.authenticate = passport.authenticate('local', {session: false});
+export const authenticate = passport.authenticate('local', {session: false});
 

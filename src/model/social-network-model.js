@@ -1,10 +1,9 @@
 'use strict';
 
-const database = require('../database');
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-const Model = core.Model;
+import { Model } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
 	facebook: {type: Sequelize.STRING},
@@ -23,5 +22,5 @@ class SocialNetworkModel extends Model {
   }
 }
 
-module.exports = new SocialNetworkModel();
+export default new SocialNetworkModel();
 

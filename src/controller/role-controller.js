@@ -1,25 +1,24 @@
-const model = require('../model');
+import * as model from '../model/index.js';
 const roleModel = model.roleModel;
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const HTTP_CODES = core.HTTP_CODE;
-const _ = require('lodash');
+import { controllerUtils, HTTP_CODE } from '../core/index.js';
+const HTTP_CODES = HTTP_CODE;
+import _ from 'lodash';
 
-const save = async function (role) {
+const saveRole = async function (role) {
   return await roleModel.save(role);
 };
 
-module.exports.loadAll = function (req, res, next) {
+export const loadAll = function (req, res, next) {
   roleModel
     .loadAll()
     .then(roles => res.json(roles))
     .catch(next);
 };
 
-module.exports.save = function (req, res, next) {
+export const save = function (req, res, next) {
   let role = controllerUtils.extractObjectFromRequest(req);
   if (role) {
-    save(role)
+    saveRole(role)
       .then(role => res.status(HTTP_CODES.OK).send(role))
       .catch(next);
   } else {
@@ -27,7 +26,7 @@ module.exports.save = function (req, res, next) {
   }
 }
 
-module.exports.remove = function (req, res, next) {
+export const remove = function (req, res, next) {
   let id = controllerUtils.extractIdFromRequest(req);
   if (id) {
     roleModel

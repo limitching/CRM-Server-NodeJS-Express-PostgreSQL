@@ -1,10 +1,8 @@
 'use strict';
 
-const nodemailer = require('nodemailer');
-const env = require('../env');
-
-const model = require('../model');
-const mailModel = model.mailModel;
+import nodemailer from 'nodemailer';
+import * as env from '../env.js';
+import { mailModel } from '../model/index.js';
 
 const LETTERS_HEAP_SIZE = 10;
 const RESEND_ON_ERROR_INTERVAL = 60 * 1000;
@@ -108,7 +106,7 @@ const sendMail = function () {
   }, 0);
 };
 
-module.exports.sendMail = sendMail;
+export { sendMail };
 
 
 

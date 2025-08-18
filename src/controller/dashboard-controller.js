@@ -1,12 +1,11 @@
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const db = require('../database');
-const model = require('../model');
+import { controllerUtils, HTTP_CODE } from '../core/index.js';
+import db from '../database.js';
+import * as model from '../model/index.js';
 const opportunityModel = model.opportunityModel;
-const HTTP_CODES = core.HTTP_CODE;
-const _ = require('lodash');
+const HTTP_CODES = HTTP_CODE;
+import _ from 'lodash';
 
-module.exports.calculate = async function (req, res, next) {
+export const calculate = async function (req, res, next) {
   // let date_from = controllerUtils.formatDate(req.body.object.date_from);
   // let date_to = controllerUtils.formatDate(req.body.object.date_to);
   let date_from = req.body.object.date_from;
@@ -36,11 +35,11 @@ module.exports.calculate = async function (req, res, next) {
   let companies = await getCompanies();
   let statuses = await getStatus();
 
-  let result = calculate(opportunities, show_by, users, companies, statuses);
+  let result = calculateData(opportunities, show_by, users, companies, statuses);
   return controllerUtils.responseHandler(res, true, "Get Opportunities Successfully ", result);  
 };
 
-module.exports.calculateV2 = async function (req, res, next) {
+export const calculateV2 = async function (req, res, next) {
   // let date_from = controllerUtils.formatDate(req.body.object.date_from);
   //   let date_to = controllerUtils.formatDate(req.body.object.date_to);
   let date_from = req.body.object.date_from;
@@ -73,7 +72,7 @@ module.exports.calculateV2 = async function (req, res, next) {
 
   // 
   if(show_by == by) {
-      let data = calculate(opportunities, show_by, users, companies, statuses);
+      let data = calculateData(opportunities, show_by, users, companies, statuses);
       let result = [{
           name: by,
           data: data
@@ -101,6 +100,8 @@ module.exports.calculateV2 = async function (req, res, next) {
       users[i] = {};
       users[i].id = user.id;
       users[i].name = user.username;
+      users[i].count = 0;
+      users[i].sum = 0;
       users[i].opportunities = [];
   }
   for (let i = 0; i < companies.length; i++) {
@@ -108,79 +109,52 @@ module.exports.calculateV2 = async function (req, res, next) {
       companies[i] = {};
       companies[i].id = company.id;
       companies[i].name = company.company_name;
+      companies[i].count = 0;
+      companies[i].sum = 0;
       companies[i].opportunities = [];
   }
-  for (let i = 0; i < statuses.length; i++) {
+  for (let i = 0; i < statuses.length; i++) {      
+      let status = statuses[i];
+      statuses[i] = {};
+      statuses[i].id = status.id;
+      statuses[i].name = status.name;
+      statuses[i].count = 0;
+      statuses[i].sum = 0;
       statuses[i].opportunities = [];
   }
 
-  months = [];
-  years = []
-  monthTemp = new Date(2000, 0, 1);
-  yearTemp = new Date(2000, 0, 1);
-  monthDataTemp = {
-      name: "2000-1",
-      opportunities: []
-  }
-  yearDataTemp = {
-      name: "2000",
-      opportunities: []
-  }
-
   opportunities.forEach(function (opportunity) {
-    // Currency
-    if (opportunity.currency == 'USD') currencies[0].opportunities.push(opportunity);
-    if (opportunity.currency == 'EUR') currencies[1].opportunities.push(opportunity);
-    // User, Company, Statuses
-    if (show_by == 'User') {
-        for (var j = 0; j < users.length; j++) {
-            if (opportunity.user_id == users[j].id) {
-                users[j].opportunities.push(opportunity)
-            }
-        }
-    }
-    if (show_by == 'Company') {
-        for (var j = 0; j < companies.length; j++) {
-            if (opportunity.company_id == companies[j].id) {
-                companies[j].opportunities.push(opportunity)
-            }
-        }
-    }
-    if (show_by == 'Status') {
-        for (var j = 0; j < statuses.length; j++) {
-            if (opportunity.status_id == statuses[j].id) {
-                statuses[j].opportunities.push(opportunity)
-            }
-        }
-    }
-
-    //Data filter by month        
-    var dateCreated = new Date(opportunity.created_at);
-    if (show_by == 'Month') {
-        if ((dateCreated.getFullYear() == monthTemp.getFullYear()) && (dateCreated.getMonth() == monthTemp.getMonth())) {
-            monthDataTemp.opportunities.push(opportunity)
-        } else {
-            monthDataTemp = Object.assign({
-                name: dateCreated.getFullYear() + "-" + (dateCreated.getMonth() + 1),
-                opportunities: [opportunity]
-            });
-            months.push(monthDataTemp);
-            monthTemp = dateCreated;
-        }
-    }
-    //Data filter by year
-    if (show_by == 'Year') {
-        if ((dateCreated.getFullYear() == yearTemp.getFullYear())) {
-            yearDataTemp.opportunities.push(opportunity);
-        } else {
-            yearDataTemp = Object.assign({
-                name: dateCreated.getFullYear(),
-                opportunities: [opportunity]
-            });
-            years.push(yearDataTemp);
-            yearTemp = dateCreated;
-        }
-    }
+      // Currency
+      if (opportunity.currency == 'USD') currencies[0].count++;
+      if (opportunity.currency == 'EUR') currencies[1].count++;
+      // User, Company, Statuses
+      if (show_by == 'User') {
+          for (var j = 0; j < users.length; j++) {
+              if (opportunity.user_id == users[j].id) {
+                  users[j].sum += opportunity.value;
+                  users[j].count++;
+                  users[j].opportunities.push(opportunity);
+              }
+          }
+      }
+      if (show_by == 'Company') {
+          for (var j = 0; j < companies.length; j++) {
+              if (opportunity.company_id == companies[j].id) {
+                  companies[j].sum += opportunity.value;
+                  companies[j].count++;
+                  companies[j].opportunities.push(opportunity);
+              }
+          }
+      }
+      if (show_by == 'Status') {
+          for (var j = 0; j < statuses.length; j++) {
+              if (opportunity.status_id == statuses[j].id) {
+                  statuses[j].sum += opportunity.value;
+                  statuses[j].count++;
+                  statuses[j].opportunities.push(opportunity);
+              }
+          }
+      }
   }, this);
 
   let result_v1;
@@ -206,7 +180,7 @@ module.exports.calculateV2 = async function (req, res, next) {
   }
 
   for(let i = 0 ; i < result_v1.length; i ++ ) {
-      let result_v2 = calculate(result_v1[i].opportunities, by, users_store.slice(), companies_store.slice(), statuses_store.slice());
+      let result_v2 = calculateData(result_v1[i].opportunities, by, users_store.slice(), companies_store.slice(), statuses_store.slice());
       delete result_v1[i].opportunities;
       result_v1[i].data = result_v2.map(e => Object.assign({}, e));
   }
@@ -231,11 +205,11 @@ const getStatus = async() => {
 const getCompanies = async() => {
   let companies = await db.sequelize.query(`SELECT * FROM accounts`, {
       type: db.sequelize.QueryTypes.SELECT
-  });
+  })
   return companies;
 }
 
-const calculate = (opportunities, show_by, users, companies, statuses) => {
+const calculateData = (opportunities, show_by, users, companies, statuses) => {
   // console.log(opportunities, 'opportunities');
   let currencies = [];
   currencies.push({
@@ -270,16 +244,16 @@ const calculate = (opportunities, show_by, users, companies, statuses) => {
       statuses[i].sum = 0;
   }
 
-  months = [];
-  years = []
-  monthTemp = new Date(2000, 0, 1);
-  yearTemp = new Date(2000, 0, 1);
-  monthDataTemp = {
+  let months = [];
+  let years = []
+  let monthTemp = new Date(2000, 0, 1);
+  let yearTemp = new Date(2000, 0, 1);
+  let monthDataTemp = {
       name: "2000-1",
       sum: 0,
       count: 0
   }
-  yearDataTemp = {
+  let yearDataTemp = {
       name: "2000",
       sum: 0,
       count: 0

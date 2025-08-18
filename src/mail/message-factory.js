@@ -1,10 +1,13 @@
 'use strict';
 
-const pug = require('pug');
-const env = require('../env');
+import pug from 'pug';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import * as env from '../env.js';
+import { userModel } from '../model/index.js';
 
-const model = require('../model');
-const userModel = model.userModel;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const compileTemplate = function (name) {
   return pug.compileFile(`${__dirname}/templates/${name}.html`);
@@ -14,7 +17,7 @@ const activationMessageTemplate = compileTemplate('account-activation');
 const accountExpiredMessageTemplate = compileTemplate('trial-period-expired');
 const resetPasswordMessageTemplate = compileTemplate('reset-password-template');
 
-module.exports.buildActivationMessage = function (user, key) {
+export const buildActivationMessage = function (user, key) {
   return activationMessageTemplate({
     recipientTitle: userModel.getDisplayName(user),
     company: env.POST_SENDER_TITLE,
@@ -23,7 +26,7 @@ module.exports.buildActivationMessage = function (user, key) {
   });
 };
 
-module.exports.buildResetPasswordMessage = function (user, key) {
+export const buildResetPasswordMessage = function (user, key) {
   return resetPasswordMessageTemplate({
     recipientTitle: userModel.getDisplayName(user),
     username: user.email,
@@ -33,7 +36,7 @@ module.exports.buildResetPasswordMessage = function (user, key) {
   });
 };
 
-module.exports.buildAccountExpiredMessage = function (user) {
+export const buildAccountExpiredMessage = function (user) {
   return accountExpiredMessageTemplate({
     recipientTitle: userModel.getDisplayName(user),
     company: env.POST_SENDER_TITLE,

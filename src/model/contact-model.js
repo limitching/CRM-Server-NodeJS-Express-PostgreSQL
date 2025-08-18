@@ -1,14 +1,11 @@
 'use strict';
 
-const _ = require('lodash');
-const database = require('../database');
+import _ from 'lodash';
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 const sequelize = database.sequelize;
 
-const core = require('../core');
-const validator = core.validator;
-const ContainerModel = core.ContainerModel;
-const Model = core.Model;
+import { validator, ContainerModel, Model } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
 	firstName: {field: 'first_name', type: Sequelize.TEXT, allowNull: false, validate: {len: 1}},
@@ -71,5 +68,5 @@ class ContactModel extends ContainerModel {
   }
 }
 
-module.exports = new ContactModel();
+export default new ContactModel();
 

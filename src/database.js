@@ -1,11 +1,10 @@
-'use strict';
+import Sequelize from 'sequelize';
+import dotenv from 'dotenv';
+import * as env from './env.js';
 
-const Sequelize = require('sequelize');
-const dotenv = require('dotenv');
-const env = require('./env');
 dotenv.config();
 
-module.exports.sequelize = new Sequelize(
+const sequelize = new Sequelize(
   env.MYSQL_DATABASE,
   env.MYSQL_USERNAME,
   env.MYSQL_PASSWORD,
@@ -23,4 +22,6 @@ module.exports.sequelize = new Sequelize(
     timezone: '+08:00' // 設定時區為台灣時間
   }
 );
-module.exports.Sequelize = Sequelize;
+
+export { sequelize, Sequelize };
+export default sequelize;

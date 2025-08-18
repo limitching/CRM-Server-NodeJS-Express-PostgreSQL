@@ -1,13 +1,11 @@
 'use strict';
 
-const permissionModel = require('./permission-model');
+import permissionModel from './permission-model.js';
 
-const database = require('../database');
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-const ContainerModel = core.ContainerModel;
-const userModel = require('./user-model');
+import { ContainerModel } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
   title: {
@@ -31,4 +29,4 @@ class RoleModel extends ContainerModel {
   }
 }
 
-module.exports = new RoleModel();
+export default new RoleModel();

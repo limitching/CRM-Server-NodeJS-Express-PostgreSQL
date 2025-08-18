@@ -1,10 +1,10 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
-const model = require('../../model');
+import * as model from '../../model/index.js';
 const permissionModel = model.permissionModel;
 const roleModel = model.roleModel;
 
-const core = require('../../core');
+import * as core from '../../core/index.js';
 const constants = core.constants;
 
 const createPermissions = function (transaction) {
@@ -14,7 +14,7 @@ const createPermissions = function (transaction) {
   return permissionModel.sequelizeModel.bulkCreate(PERMISSIONS, {transaction: transaction});
 };
 
-module.exports.init = async function (transaction) {
+export const init = async function (transaction) {
   let superAdminRole = {title: "Super Administrator", default: false};
   let userRole = {title: "User", default: true};
 

@@ -1,29 +1,28 @@
 'use strict';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const https = require('https');
-const passport = require('passport');
-const morgan = require('morgan');
-const errorhandler = require('errorhandler');
-const roleData = require('./data/role');
-const userData = require('./data/user');
+import express from 'express';
+import bodyParser from 'body-parser';
+import fs from 'fs';
+import https from 'https';
+import passport from 'passport';
+import morgan from 'morgan';
+import errorhandler from 'errorhandler';
+import { init as roleDataInit } from './data/role.js';
+import { init as userDataInit } from './data/user.js';
 
-const env = require('../env');
-const mail = require('../mail');
-const scheduler = require('./scheduler');
-const routes = require("./routes");
+import * as env from '../env.js';
+import * as mail from '../mail/index.js';
+import { start as schedulerStart } from './scheduler.js';
+import routes from "./routes.js";
 
-const controller = require('../controller');
+import * as controller from '../controller/index.js';
 const authController = controller.authController;
 const mainController = controller.mainController;
 
-const model = require('../model');
+import * as model from '../model/index.js';
 const configModel = model.configModel;
 
-const database = require('../database');
-const sequelize = database.sequelize;
+import { sequelize } from '../database.js';
 
 class Server {
   constructor() {
@@ -74,19 +73,19 @@ class Server {
 
   _initializeApp() {
     return Promise.all([
-      this._loadData('role', roleData.init)
+      this._loadData('role', roleDataInit)
     ]);
   }
 
   _loadInitialData() {
     return Promise.all([
-      this._loadData('user', userData.init)
+      this._loadData('user', userDataInit)
     ]);
   }
 
   _startServices() {
     mail.sendMail();
-    scheduler.start();
+    schedulerStart();
 
     let httpsOptions = null;
 
@@ -131,4 +130,4 @@ class Server {
 
 Server.APPLICATION_INITIALIZATION_KEY = "app.initialized";
 
-module.exports = new Server();
+export default new Server();

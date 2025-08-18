@@ -1,20 +1,20 @@
 'use strict';
 
-const _ = require('lodash');
-const schedule = require('node-schedule');
-const env = require('../env');
-const mail = require('../mail');
+import _ from 'lodash';
+import schedule from 'node-schedule';
+import * as env from '../env.js';
+import * as mail from '../mail/index.js';
 
-const model = require('../model');
+import * as model from '../model/index.js';
 const userModel = model.userModel;
 const accessTokenModel = model.accessTokenModel;
 const reminderModel = model.reminderModel;
 const opportunityModel = model.opportunityModel;
 
-const controller = require('../controller');
+import * as controller from '../controller/index.js';
 const userController = controller.userController;
 
-const database = require('../database');
+import database from '../database.js';
 const sequelize = database.sequelize;
 
 
@@ -72,7 +72,7 @@ const checkReminderUsers = function() {
   .catch(error => console.log(error));
 }
 
-module.exports.start = function () {
+export const start = function () {
   schedule.scheduleJob(`*/${env.SCHEDULER.TRIAL_PERIOD_CHECK_INTERVAL_IN_MINUTES} * * * *`, checkTrialPeriod);
   schedule.scheduleJob(`*/${env.SCHEDULER.REMINDER_USER_CHECK_INTERVAL_IN_MINUTES} * * * *`, checkReminderUsers);
 };

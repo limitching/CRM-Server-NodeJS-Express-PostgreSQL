@@ -1,10 +1,9 @@
 'use strict';
 
-const database = require('../database');
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-const Model = core.Model;
+import { Model } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
   user_id: {type: Sequelize.UUID},
@@ -20,4 +19,4 @@ class ReminderModel extends Model {
   }
 }
 
-module.exports = new ReminderModel();
+export default new ReminderModel();

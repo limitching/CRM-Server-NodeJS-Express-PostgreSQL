@@ -1,13 +1,12 @@
 'use strict';
 
-const userModel = require('./user-model');
+import userModel from './user-model.js';
 
-const database = require('../database');
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 const sequelize = database.sequelize;
 
-const core = require('../core');
-const Model = core.Model;
+import { Model } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
   value: {type: Sequelize.TEXT, field: 'value', allowNull: false},
@@ -62,4 +61,4 @@ class AccessTokenModel extends Model {
   }
 }
 
-module.exports = new AccessTokenModel();
+export default new AccessTokenModel();

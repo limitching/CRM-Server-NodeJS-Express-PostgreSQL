@@ -1,16 +1,15 @@
-const model = require('../model');
+import * as model from '../model/index.js';
 const statusModel = model.statusModel;
 const opportunityModel = model.opportunityModel;
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const HTTP_CODES = core.HTTP_CODE;
-const _ = require('lodash');
+import { controllerUtils, HTTP_CODE } from '../core/index.js';
+const HTTP_CODES = HTTP_CODE;
+import _ from 'lodash';
 
-const save = async function (status) {
+const saveStatus = async function (status) {
   return await statusModel.save(status);
 };
 
-const reorder = async function(data) {
+const reorderStatuses = async function(data) {
   await Promise.all(data.map(async(status, i) => {
     await statusModel
       .findById(status.id)
@@ -26,7 +25,7 @@ const reorder = async function(data) {
   }))
 };
 
-const remove = async function(opportunities) {
+const removeStatus = async function(opportunities) {
   await Promise.all(opportunities.map(async(opportunity) => {
       // Delete active opportunities
       if (opportunity.is_active) {
@@ -56,7 +55,7 @@ const remove = async function(opportunities) {
   }));
 }
 
-module.exports.loadAll = function (req, res, next) {
+export const loadAll = function (req, res, next) {
   statusModel
     .loadAll()
     .then(statuses => {
@@ -66,10 +65,10 @@ module.exports.loadAll = function (req, res, next) {
     .catch(next);
 };
 
-module.exports.save = function (req, res, next) {
+export const save = function (req, res, next) {
   let status = controllerUtils.extractObjectFromRequest(req);
   if (status) {
-    save(status)
+    saveStatus(status)
       .then(status => res.status(HTTP_CODES.OK).send(status))
       .catch(error => {
         res.status(HTTP_CODES.BAD_REQUEST).send(error.errors[0]);
@@ -79,10 +78,10 @@ module.exports.save = function (req, res, next) {
   }
 };
 
-module.exports.remove = function (req, res, next) {
+export const remove = function (req, res, next) {
   if (req.body.id) {
     let opportunities = req.body.opportunities;
-    remove(opportunities)
+    removeStatus(opportunities)
       .then(() => {
         statusModel
           .removeById(req.body.id)
@@ -96,9 +95,9 @@ module.exports.remove = function (req, res, next) {
   }
 };
 
-module.exports.reorder = function (req, res, next) {
+export const reorder = function (req, res, next) {
   let data = req.body;
-  reorder(data).then(() => {
+  reorderStatuses(data).then(() => {
     return res.status(HTTP_CODES.OK).send({message: 'Status reordered successfully.'});
   });
 }

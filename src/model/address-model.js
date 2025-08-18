@@ -1,10 +1,9 @@
 'use strict';
 
-const database = require('../database');
+import database from '../database.js';
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-const Model = core.Model;
+import { Model } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
   street1: {type: Sequelize.TEXT},
@@ -26,5 +25,5 @@ class AddressModel extends Model {
   }
 }
 
-module.exports = new AddressModel();
+export default new AddressModel();
 

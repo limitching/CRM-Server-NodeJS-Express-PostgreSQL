@@ -1,6 +1,6 @@
 'use strict';
 
-const controller = require('../controller');
+import * as controller from '../controller/index.js';
 const authController = controller.authController;
 const userController = controller.userController;
 const accessController = controller.accessController;
@@ -15,11 +15,11 @@ const roleController = controller.roleController;
 const socialNetworkController = controller.socialNetworkController;
 const departmentController = controller.departmentController;
 
-const core = require('../core');
+import * as core from '../core/index.js';
 const constants = core.constants;
 
 
-module.exports = function (router) {
+export default function (router) {
   router.post('/login', authController.authenticate, authController.serialize,
     authController.generateToken, authController.sendAuthData);
   router.post('/logout', authController.checkAccessToken, authController.checkAccessTokenValid, authController.logout);

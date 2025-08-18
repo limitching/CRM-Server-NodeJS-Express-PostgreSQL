@@ -1,15 +1,13 @@
 'use strict';
 
-const passwordGenerator = require('generate-password');
-const userModel = require('./user-model');
+import passwordGenerator from 'generate-password';
+import userModel from './user-model.js';
 
-const database = require('../database');
+import database from '../database.js';
 const sequelize = database.sequelize;
 const Sequelize = database.Sequelize;
 
-const core = require('../core');
-const constants = core.constants;
-const Model = core.Model;
+import { constants, Model } from '../core/index.js';
 
 const MODEL_ATTRIBUTES = {
   value: {type: Sequelize.STRING, unique: true, allowNull: false},
@@ -67,4 +65,4 @@ class ConfirmationKeyModel extends Model {
   };
 }
 
-module.exports = new ConfirmationKeyModel();
+export default new ConfirmationKeyModel();

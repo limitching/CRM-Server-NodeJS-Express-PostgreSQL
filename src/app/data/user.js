@@ -1,15 +1,15 @@
 'use strict';
 
-const env = require('../../env');
+import * as env from '../../env.js';
 
-const model = require('../../model');
+import * as model from '../../model/index.js';
 const userModel = model.userModel;
 
-const core = require('../../core');
+import * as core from '../../core/index.js';
 const accessCache = core.accessCache;
 const constants = core.constants;
 
-module.exports.init = function (transaction) {
+export const init = function (transaction) {
   let superAdministratorRole = accessCache.getRole([constants.PERMISSION_TYPE.administration]);
   return userModel.save({
     username: env.DEFAULT_ADMINISTRATOR_NAME,

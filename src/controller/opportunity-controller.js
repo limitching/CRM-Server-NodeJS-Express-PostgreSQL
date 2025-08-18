@@ -1,17 +1,16 @@
-const model = require('../model');
+import * as model from '../model/index.js';
 const opportunityModel = model.opportunityModel;
 const userModel = model.userModel;
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const HTTP_CODES = core.HTTP_CODE;
-const mail = require('../mail');
-const _ = require('lodash');
+import { controllerUtils, HTTP_CODE } from '../core/index.js';
+const HTTP_CODES = HTTP_CODE;
+import * as mail from '../mail/index.js';
+import _ from 'lodash';
 
-const save = async function (opportunity) {
+const saveOpportunity = async function (opportunity) {
   return await opportunityModel.save(opportunity);
 };
 
-const reorder = async function(data) {
+const reorderOpportunities = async function(data) {
   await Promise.all(data.map(async(status, i) => {
     await Promise.all(status.widgets.map(async(opportunity, j) => {
         await opportunityModel
@@ -30,7 +29,7 @@ const reorder = async function(data) {
   }))
 };
 
-const archiveAll = async function(opportunities) {
+const archiveAllOpportunities = async function(opportunities) {
   await Promise.all(opportunities.map(async(opportunity) => {
     await opportunityModel
         .findById(opportunity.id)
@@ -44,7 +43,7 @@ const archiveAll = async function(opportunities) {
   }));
 }
 
-module.exports.loadAll = function (req, res, next) {
+export const loadAll = function (req, res, next) {
   opportunityModel
     .loadAll()
     .then(opportunities => {
@@ -54,12 +53,12 @@ module.exports.loadAll = function (req, res, next) {
     .catch(next);
 };
 
-module.exports.save = function (req, res, next) {
+export const save = function (req, res, next) {
   let opportunity = controllerUtils.extractObjectFromRequest(req);
   if (opportunity) {
     opportunity.notify_users = updateNotifyUsers(opportunity).toString();
 
-    save(opportunity)
+    saveOpportunity(opportunity)
       .then((opportunity) => {
         let notify_users = updateNotifyUsers(opportunity);
         if(notify_users.length>0){         
@@ -76,7 +75,7 @@ module.exports.save = function (req, res, next) {
   }
 };
 
-module.exports.remove = function (req, res, next) {
+export const remove = function (req, res, next) {
   let id = controllerUtils.extractIdFromRequest(req);
   if (id) {
     opportunityModel
@@ -88,16 +87,16 @@ module.exports.remove = function (req, res, next) {
   }
 };
 
-module.exports.reorder = async function(req, res, next) {
+export const reorder = async function(req, res, next) {
   let data = req.body;
-  reorder(data).then(() => {
+  reorderOpportunities(data).then(() => {
     return res.status(HTTP_CODES.OK).send({message: 'Opportunity reordered successfully.'});
   });
 };
 
-module.exports.archiveAll = function(req, res, next) {
+export const archiveAll = function(req, res, next) {
   let opportunities = req.body.opportunities;
-  archiveAll(opportunities).then(() => {
+  archiveAllOpportunities(opportunities).then(() => {
     return res.status(HTTP_CODES.OK).send({message:'Opportunity archived successfully.'});
   });
 };

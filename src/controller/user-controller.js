@@ -1,33 +1,32 @@
 'use strict';
 
-const _ = require('lodash');
-const moment = require('moment');
-const mail = require('../mail');
-const env = require('../env');
-const accessController = require('./access-controller');
+import _ from 'lodash';
+import moment from 'moment';
+import * as mail from '../mail/index.js';
+import * as env from '../env.js';
+import * as accessController from './access-controller.js';
 
-const model = require('../model');
+import * as model from '../model/index.js';
 const userModel = model.userModel;
 const accessTokenModel = model.accessTokenModel;
 const confirmationKeyModel = model.confirmationKeyModel;
 
-const database = require('../database');
+import database from '../database.js';
 const sequelize = database.sequelize;
 
-const core = require('../core');
-const controllerUtils = core.controllerUtils;
-const accessCache = core.accessCache;
-const HTTP_CODES = core.HTTP_CODE;
-const PERMISSION_TYPE = core.constants.PERMISSION_TYPE;
-const BadRequestError = core.error.BadRequestError;
+import { controllerUtils, accessCache, HTTP_CODE, constants, error } from '../core/index.js';
+const HTTP_CODES = HTTP_CODE;
+const PERMISSION_TYPE = constants.PERMISSION_TYPE;
+const BadRequestError = error.BadRequestError;
 
-var fs = require('graceful-fs');
+import fs from 'graceful-fs';
 const aws = {
   accessKeyId: env.AWS.ACCESS_KEY_ID,
   secretAccessKey: env.AWS.SECRET_ACCESS_KEY
 }
 const BUCKET_NAME = env.AWS.BUCKET_NAME;
-var s3Client = require('s3').createClient({
+import s3 from 's3';
+var s3Client = s3.createClient({
   s3Options: aws
 });
 
@@ -40,7 +39,7 @@ const throwSuperAdministratorCredentialsLostError = function () {
   throw new BadRequestError('Super administrator credentials will be lost');
 };
 
-const save = async function (user, authData) {
+const saveUser = async function (user, authData) {
   let permissions = accessCache.getPermissionsForRoles(user.roles);
   let isSuperAdministrator = _.indexOf(permissions, PERMISSION_TYPE.administration) >= 0;
   if (isSuperAdministrator) {
@@ -62,18 +61,18 @@ const save = async function (user, authData) {
   return await userModel.save(user);
 };
 
-module.exports.loadAll = function (req, res, next) {
+export const loadAll = function (req, res, next) {
   userModel
     .loadAll()
     .then(users => res.json(users))
     .catch(next);
 };
 
-module.exports.save = function (req, res, next) {
+export const save = function (req, res, next) {
   let user = controllerUtils.extractObjectFromRequest(req);
   if (user) {
     user.roles = !user.roles ? getDefaultRoles() : user.roles;
-    save(user, accessController.getAuthData(req))
+    saveUser(user, accessController.getAuthData(req))
       .then(user => res.status(HTTP_CODES.OK).send(user))
       .catch(error => {
         res.status(HTTP_CODES.BAD_REQUEST).send(error);
@@ -83,7 +82,7 @@ module.exports.save = function (req, res, next) {
   }
 };
 
-module.exports.remove = function (req, res, next) {
+export const remove = function (req, res, next) {
   let id = controllerUtils.extractIdFromRequest(req);
   if (id) {
     let authData = accessController.getAuthData(req);
@@ -112,7 +111,7 @@ const deactivateUser = async function (userId, transaction) {
   await accessTokenModel.clearUserSession(userId, transaction);
 };
 
-module.exports.register = function (req, res, next) {
+export const register = function (req, res, next) {
   let user = controllerUtils.extractObjectFromRequest(req);
   if (user && !user.id) {
     user.active = false;
@@ -130,7 +129,7 @@ module.exports.register = function (req, res, next) {
   }
 };
 
-module.exports.confirmResetPassword = function (req, res, next) {
+export const confirmResetPassword = function (req, res, next) {
   let user = req.body;
   if (user && user.email) {
     userModel
@@ -155,7 +154,7 @@ module.exports.confirmResetPassword = function (req, res, next) {
 };
 
 
-module.exports.activateAccount = function (req, res, next) {
+export const activateAccount = function (req, res, next) {
   let activationKey = req.body.key, password = req.body.password;
   if (activationKey && password) {
     confirmationKeyModel
@@ -186,7 +185,7 @@ module.exports.activateAccount = function (req, res, next) {
   }
 };
 
-module.exports.resetPassword = function (req, res, next) {
+export const resetPassword = function (req, res, next) {
   let activationKey = req.body.key, password = req.body.password;
   if (activationKey && password) {
     confirmationKeyModel
@@ -219,7 +218,7 @@ module.exports.resetPassword = function (req, res, next) {
   }
 };
 
-module.exports.checkAlreadyExist = function (req, res, next) {
+export const checkAlreadyExist = function (req, res, next) {
   let usernameOrEmail = req.body ? req.body.value : '';
   let id = req.body ? req.body.objectId : '';
   if (usernameOrEmail) {
@@ -232,7 +231,7 @@ module.exports.checkAlreadyExist = function (req, res, next) {
   }
 };
 
-module.exports.update = function(req, res, next) {
+export const update = function(req, res, next) {
   return userModel
     .findById(req.body.object.id)
     .then(user => {
@@ -250,7 +249,7 @@ module.exports.update = function(req, res, next) {
     .catch(error => res.status(400).send(error));
 };
 
-module.exports.upload = function(req, res, next) {
+export const upload = function(req, res, next) {
   const data = req.body.base64;
   const tempLocation = '/image/' + Date.now() + '.jpg';
   uploadPhoto(data, tempLocation, (imageUrl) => {
@@ -288,7 +287,7 @@ const uploadPhoto = (data, filepath, cb) => {
   uploader.on('end', function () {
     console.log('upload end')
     fs.unlinkSync('public' + filepath);
-    const imageUrl = require('s3').getPublicUrl(BUCKET_NAME, uploadKey);
+    const imageUrl = s3.getPublicUrl(BUCKET_NAME, uploadKey);
     cb(imageUrl);
   });
 }
