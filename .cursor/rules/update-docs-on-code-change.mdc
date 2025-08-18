@@ -1,8 +1,3 @@
----
-description: CRM Server Node.js Express PostgreSQL - Project Rules
-globs: ["**/*"]
-alwaysApply: false
----
 
 # CRM Server Node.js Express PostgreSQL - Project Rules
 
@@ -22,7 +17,17 @@ This is a CRM server built with Node.js, Express, and PostgreSQL. The project in
 - Document API endpoints, database models, and configuration options
 - Use clear and comprehensive descriptions for CRM system features
 
-## .kiro Hooks Integration
+## Automated Compliance Checking
+This project now includes automated cursor rules compliance checking:
+
+### Git Pre-Commit Hook
+- **Automatic Trigger**: Runs before every `git commit`
+- **File Validation**: Checks if relevant files trigger appropriate rules
+- **Documentation Check**: Verifies documentation updates for code changes
+- **Security Verification**: Ensures security hooks are available
+- **Rule Compliance**: Validates all cursor rules are properly configured
+
+### .kiro Hooks Integration
 This project uses .kiro hooks to automatically prompt for documentation updates when code changes occur. The hooks are located in `.kiro/hooks/` and will trigger when:
 - JavaScript source files are modified
 - Configuration files change
@@ -36,12 +41,34 @@ When prompted by .kiro hooks, ensure you:
 4. Consider the impact on API users and system administrators
 
 ## Development Workflow
-- Test changes thoroughly before committing
-- Update environment configuration examples if needed
-- Ensure database migrations are properly documented
-- Keep frontend and backend documentation synchronized
+- **Pre-Commit Checks**: Always run automated cursor rules compliance checks
+- **Documentation Updates**: Update docs for any code changes
+- **Testing**: Test changes thoroughly before committing
+- **Environment Config**: Update environment configuration examples if needed
+- **Database Docs**: Ensure database migrations are properly documented
+- **Frontend/Backend Sync**: Keep frontend and backend documentation synchronized
 
 ## Security & Best Practices
+- Never commit sensitive information like API keys or passwords
+- Use environment variables for configuration
+- Implement proper authentication and authorization
+- Follow security best practices for CRM data handling
+
+## Compliance Checklist
+Before each commit, ensure you've completed:
+- [ ] **Automated Checks**: Pre-commit hook has run successfully
+- [ ] **Documentation**: Updated relevant docs for code changes
+- [ ] **Code Style**: Followed ES6+ standards and project conventions
+- [ ] **Security**: No hardcoded secrets or security vulnerabilities
+- [ ] **Testing**: Changes thoroughly tested
+- [ ] **Workflow**: All .kiro hooks satisfied
+
+## Manual Rule Triggering
+If automated checks don't cover your specific case, manually trigger:
+- `cursor-rules-precommit.kiro.hook` - Complete compliance verification
+- `security-scan-precommit.kiro.hook` - Security vulnerability scanning
+- `update-docs-on-code-change.kiro.hook` - Documentation update prompts
+
 - Never commit sensitive information like API keys or passwords
 - Use environment variables for configuration
 - Implement proper authentication and authorization

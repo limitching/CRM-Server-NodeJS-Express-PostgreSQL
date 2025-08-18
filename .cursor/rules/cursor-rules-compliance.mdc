@@ -1,0 +1,136 @@
+# Cursor Rules Compliance and Pre-Commit Automation Rule
+
+## Overview
+This rule ensures that all development activities comply with cursor rules and leverages automated pre-commit checking to maintain project quality and consistency.
+
+## Automated Compliance System
+This project implements a comprehensive automated compliance checking system:
+
+### Git Pre-Commit Hook (`.git/hooks/pre-commit`)
+- **Automatic Execution**: Runs before every `git commit` command
+- **Smart File Detection**: Identifies files that should trigger cursor rules
+- **Multi-Rule Validation**: Checks compliance with all cursor rules
+- **Warning System**: Provides clear guidance without blocking commits
+
+### Pre-Commit Hook Features
+1. **File Type Validation**: Ensures relevant files trigger appropriate rules
+2. **Documentation Check**: Verifies documentation updates for code changes
+3. **Security Verification**: Confirms security hooks are available
+4. **Rule Compliance**: Validates all cursor rules are properly configured
+
+## Cursor Rules Integration
+
+### Primary Rules
+- **`update-docs-on-code-change.mdc`**: Documentation synchronization
+- **`security-scan-precommit.mdc`**: Security vulnerability scanning
+- **`cursor-rules-compliance.mdc`**: This rule - overall compliance
+
+### Kiro Hooks Integration
+- **`cursor-rules-precommit.kiro.hook`**: Complete compliance verification
+- **`security-scan-precommit.kiro.hook`**: Security analysis
+- **`update-docs-on-code-change.kiro.hook`**: Documentation updates
+
+## Compliance Workflow
+
+### Automatic Pre-Commit Process
+```bash
+git add .
+git commit -m "your message"
+# 🔍 Pre-commit hook automatically runs:
+#   - File validation
+#   - Documentation check
+#   - Security verification
+#   - Rule compliance validation
+```
+
+### Manual Rule Execution
+When automated checks don't cover specific cases:
+1. **Documentation Updates**: Review `update-docs-on-code-change.kiro.hook`
+2. **Security Scanning**: Execute `security-scan-precommit.kiro.hook`
+3. **Full Compliance**: Run `cursor-rules-precommit.kiro.hook`
+
+## Compliance Requirements
+
+### Before Each Commit
+- [ ] **Automated Checks**: Pre-commit hook has run successfully
+- [ ] **Documentation**: Updated relevant docs for code changes
+- [ ] **Code Style**: Followed ES6+ standards and project conventions
+- [ ] **Security**: No hardcoded secrets or security vulnerabilities
+- [ ] **Testing**: Changes thoroughly tested
+- [ ] **Workflow**: All .kiro hooks satisfied
+
+### File Type Compliance
+- **Source Code** (`.js`, `.ts`): Must follow ES6+ standards and project structure
+- **Configuration** (`.json`, `.env*`): Must use environment variables for secrets
+- **Documentation** (`.md`): Must stay synchronized with code changes
+- **Package Files**: Must not contain hardcoded credentials
+
+## Development Standards
+
+### Code Quality
+- Use ES6+ JavaScript features consistently
+- Follow RESTful API design principles
+- Implement proper error handling and validation
+- Use async/await for asynchronous operations
+- Maintain existing project structure and naming conventions
+
+### Documentation Standards
+- Keep documentation synchronized with code changes
+- Update README.md for new features or functionality changes
+- Document API endpoints, database models, and configuration
+- Use clear and comprehensive descriptions
+
+### Security Standards
+- Never commit sensitive information (API keys, passwords, tokens)
+- Use environment variables for all configuration
+- Implement proper authentication and authorization
+- Follow OWASP security guidelines
+- Protect customer data according to CRM requirements
+
+## Troubleshooting
+
+### Pre-Commit Hook Issues
+```bash
+# Check hook permissions
+ls -la .git/hooks/pre-commit
+
+# Make executable if needed
+chmod +x .git/hooks/pre-commit
+
+# Verify hook content
+cat .git/hooks/pre-commit
+```
+
+### Rule Compliance Issues
+```bash
+# Check cursor rules
+ls -la .cursor/rules/
+
+# Verify kiro hooks
+ls -la .kiro/hooks/
+
+# Manual compliance check
+# Review .kiro/hooks/cursor-rules-precommit.kiro.hook
+```
+
+## Best Practices
+
+1. **Always Run Pre-Commit**: Let automated checks run before every commit
+2. **Follow Rule Prompts**: Respond to .kiro hook prompts when they appear
+3. **Update Documentation**: Keep docs in sync with code changes
+4. **Security First**: Never compromise security for convenience
+5. **Test Thoroughly**: Ensure changes work before committing
+6. **Maintain Consistency**: Follow established project patterns
+
+## Integration Benefits
+
+- **Automated Quality Control**: Consistent checking without manual effort
+- **Early Issue Detection**: Catch problems before they reach the repository
+- **Team Standardization**: Ensure all developers follow the same rules
+- **Documentation Sync**: Keep project docs current automatically
+- **Security Assurance**: Prevent accidental security violations
+- **Workflow Efficiency**: Streamlined development process
+description:
+globs:
+alwaysApply: false
+---
