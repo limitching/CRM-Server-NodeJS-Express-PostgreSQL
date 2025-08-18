@@ -1,8 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-import database from '../../database.js';
-const sequelize = database.sequelize;
+import { sequelize } from '../../database.js';
 
 let associationsMetadataByEntityName = {};
 let modelMetadataByEntityName = {};

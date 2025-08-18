@@ -10,7 +10,7 @@ export const PORT = process.env.PORT || 8087;
 export const HTTPS_DISABLED = !!process.env.HTTPS_DISABLED;
 export const PRIVATE_KEY = process.env.PRIVATE_KEY || '../key.pem';
 export const PUBLIC_KEY = process.env.PUBLIC_KEY || '../server.crt';
-export const FRONTEND_URL = process.env.FRONTEND_URL || 'https://localhost:4200';
+export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 // MySQL Database Configuration
 export const MYSQL_HOST = process.env.MYSQL_HOST || 'localhost';
@@ -20,9 +20,10 @@ export const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || 'password';
 export const MYSQL_DATABASE = process.env.MYSQL_DATABASE || 'boilerplate';
 export const MYSQL_DIALECT = process.env.MYSQL_DIALECT || 'mysql';
 
-export const POST_ADDRESS = process.env.POST_ADDRESS || 'EMAIL';
-export const POST_SERVICE = process.env.POST_SERVICE || 'gmail';
-export const POST_PASSWORD = process.env.POST_PASSWORD || 'PASSWORD';
+// Mail Configuration
+export const MAIL_BROKER_HOST = process.env.MAIL_BROKER_HOST || 'smtp.gmail.com';
+export const MAIL_BROKER_ACCOUNT = process.env.MAIL_BROKER_ACCOUNT || 'your-email@gmail.com';
+export const MAIL_BROKER_PASSWORD = process.env.MAIL_BROKER_PASSWORD || 'your-app-password';
 export const POST_SENDER_TITLE = process.env.POST_SENDER_TITLE || 'PRO FORWARD';
 
 export const DEFAULT_ADMINISTRATOR_NAME = 'admin';

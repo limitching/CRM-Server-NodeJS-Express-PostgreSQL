@@ -5,7 +5,9 @@ import bodyParser from 'body-parser';
 import fs from 'fs';
 import https from 'https';
 import passport from 'passport';
-import morgan from 'morgan';
+import session from 'express-session';
+import { morganMiddleware, morganDev, morganSimple } from './morgan-config.js';
+import { requestLogger } from './request-logger.js';
 import errorhandler from 'errorhandler';
 import { init as roleDataInit } from './data/role.js';
 import { init as userDataInit } from './data/user.js';
@@ -29,18 +31,37 @@ class Server {
     this._started = false;
     this._errorHandler = null;
 
-    console.info(`Environment: ${env.NODE_ENV}`);
+    console.info(`Environment: ${env.NODE_ENV}`); 
     passport.use(authController.localStrategy);
   }
 
   _initApp() {
     this._app = express();
     let rootRouter = express.Router();
-
-    this._app.use(morgan('combined'));
-
+    
+    // 先設置 body-parser，這樣 morgan 才能讀取到 req.body
     this._app.use(bodyParser.json());
+    
+    // 根據環境選擇不同的 morgan 配置
+    if (env.NODE_ENV === env.ENV_TYPE.development) {
+      this._app.use(morganDev);
+    } else {
+      this._app.use(morganSimple);
+    }
+    
+    // 啟用詳細日誌記錄（包含請求體和響應詳情）
+    this._app.use(morganMiddleware);
+    
+    // 使用自定義請求日誌中間件（更可靠的請求體記錄）
+    this._app.use(requestLogger);
+
     this._app.use(mainController.addHeaders);
+    this._app.use(session({
+      secret: 'crm-secret-key',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: false }
+    }));
     this._app.use(passport.initialize());
     this._app.use(passport.session());
 

@@ -11,8 +11,8 @@ const userModel = model.userModel;
 const accessTokenModel = model.accessTokenModel;
 const confirmationKeyModel = model.confirmationKeyModel;
 
-import database from '../database.js';
-const sequelize = database.sequelize;
+import { sequelize, Sequelize } from '../database.js';
+
 
 import { controllerUtils, accessCache, HTTP_CODE, constants, error } from '../core/index.js';
 const HTTP_CODES = HTTP_CODE;
@@ -103,6 +103,13 @@ const activateUser = async function (userId, password, expires, transaction) {
   await userModel.activateUser(userId, password, expires, transaction);
 };
 
+const activateUserWithoutPassword = async function (userId, expires, transaction) {
+  if (!transaction) {
+    return sequelize.transaction(transaction => activateUserWithoutPassword(userId, expires, transaction));
+  }
+  await userModel.activateUserWithoutPassword(userId, expires, transaction);
+};
+
 const deactivateUser = async function (userId, transaction) {
   if (!transaction) {
     return sequelize.transaction(transaction => deactivateUser(userId, transaction));
@@ -121,11 +128,22 @@ export const register = function (req, res, next) {
       .then(user => confirmationKeyModel.createAccountActivationKey(user.id))
       .then((key) => {
         mail.sendActivationMessage(user, key);
-        res.json({supportEmail: env.POST_ADDRESS});
+        res.json({
+          success: true,
+          message: 'Registration successful. Please check your email to activate your account.',
+          data: {
+            message: 'Registration successful. Please check your email to activate your account.',
+            supportEmail: env.MAIL_BROKER_ACCOUNT
+          }
+        });
       })
       .catch(next);
   } else {
-    res.status(HTTP_CODES.BAD_REQUEST).send('Incorrect request');
+    res.status(HTTP_CODES.BAD_REQUEST).json({
+      success: false,
+      message: 'Incorrect request',
+      data: null
+    });
   }
 };
 
@@ -136,12 +154,19 @@ export const confirmResetPassword = function (req, res, next) {
       .findByUsernameOrEmail(user.email)
       .then((user) => {
         if (user) {
-          confirmationKeyModel
-            .createResetPasswordKey(user.id)
-            .then((key) => {
-              mail.sendResetPasswordMessage(user, key);
-              res.json({supportEmail: env.POST_ADDRESS});
-            })
+                      confirmationKeyModel
+              .createResetPasswordKey(user.id)
+              .then((key) => {
+                mail.sendResetPasswordMessage(user, key);
+                res.json({
+                  success: true,
+                  message: 'Password reset email sent successfully.',
+                  data: {
+                    message: 'Password reset email sent successfully.',
+                    supportEmail: env.MAIL_BROKER_ACCOUNT
+                  }
+                });
+              })
             .catch(next);
         } else {
           res.status(HTTP_CODES.BAD_REQUEST).send("User not found");
@@ -155,8 +180,8 @@ export const confirmResetPassword = function (req, res, next) {
 
 
 export const activateAccount = function (req, res, next) {
-  let activationKey = req.body.key, password = req.body.password;
-  if (activationKey && password) {
+  let activationKey = req.body.key;
+  if (activationKey) {
     confirmationKeyModel
       .findAccountActivationKeyByValue(activationKey)
       .then((key) => {
@@ -167,7 +192,7 @@ export const activateAccount = function (req, res, next) {
               if (env.TRIAL_PERIOD_INTERVAL_IN_MS) {
                 expires = moment().add(env.TRIAL_PERIOD_INTERVAL_IN_MS, 'milliseconds');
               }
-              return activateUser(key.userId, password, expires.toDate(), transaction)
+              return activateUserWithoutPassword(key.userId, expires.toDate(), transaction)
                 .then(() => confirmationKeyModel.removeById(key.id, transaction))
                 .then(() => userModel.findById(key.userId));
             })

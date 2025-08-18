@@ -2,8 +2,8 @@
 
 import permissionModel from './permission-model.js';
 
-import database from '../database.js';
-const Sequelize = database.Sequelize;
+import { sequelize, Sequelize } from '../database.js';
+
 
 import { ContainerModel } from '../core/index.js';
 

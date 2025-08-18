@@ -8,7 +8,7 @@ import { mailModel, userModel } from '../model/index.js';
 
 const createLetterObject = function (recipients, subject, textBody, htmlBody) {
   return {
-    from: `"${env.POST_SENDER_TITLE}" <${env.POST_ADDRESS}>`,
+    from: `"${env.POST_SENDER_TITLE}" <${env.MAIL_BROKER_ACCOUNT}>`,
     to: recipients,
     subject: subject,
     text: textBody,

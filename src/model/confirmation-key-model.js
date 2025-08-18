@@ -3,9 +3,9 @@
 import passwordGenerator from 'generate-password';
 import userModel from './user-model.js';
 
-import database from '../database.js';
-const sequelize = database.sequelize;
-const Sequelize = database.Sequelize;
+import { sequelize, Sequelize } from '../database.js';
+
+
 
 import { constants, Model } from '../core/index.js';
 

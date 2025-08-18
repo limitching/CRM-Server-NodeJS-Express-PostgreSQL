@@ -14,8 +14,7 @@ const opportunityModel = model.opportunityModel;
 import * as controller from '../controller/index.js';
 const userController = controller.userController;
 
-import database from '../database.js';
-const sequelize = database.sequelize;
+import { sequelize, Sequelize } from '../database.js';
 
 
 const USERS_HEAP_SIZE = 10;

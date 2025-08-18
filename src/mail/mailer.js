@@ -8,11 +8,18 @@ const LETTERS_HEAP_SIZE = 10;
 const RESEND_ON_ERROR_INTERVAL = 60 * 1000;
 
 
+
+
 let transporter = nodemailer.createTransport({
-  service: env.POST_SERVICE,
+  host: env.MAIL_BROKER_HOST,
+  port: 25,
+  secure: false, // 25 端口使用 HTTP
   auth: {
-    user: env.POST_ADDRESS,
-    pass: env.POST_PASSWORD
+    user: env.MAIL_BROKER_ACCOUNT,
+    pass: env.MAIL_BROKER_PASSWORD
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 

@@ -1,9 +1,9 @@
 'use strict';
 
 import _ from 'lodash';
-import database from '../database.js';
-const Sequelize = database.Sequelize;
-const sequelize = database.sequelize;
+import { sequelize, Sequelize } from '../database.js';
+
+
 
 import { validator, ContainerModel, Model } from '../core/index.js';
 

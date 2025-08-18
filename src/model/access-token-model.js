@@ -2,9 +2,9 @@
 
 import userModel from './user-model.js';
 
-import database from '../database.js';
-const Sequelize = database.Sequelize;
-const sequelize = database.sequelize;
+import { sequelize, Sequelize } from '../database.js';
+
+
 
 import { Model } from '../core/index.js';
 

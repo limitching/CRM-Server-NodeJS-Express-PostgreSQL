@@ -87,9 +87,20 @@ export const serialize = function (req, res, next) {
 export const localStrategy = new LocalStrategy({usernameField: 'username', passwordField: 'password'},
   (username, password, done) => {
     userModel.loadAuthDataByByUsernameOrEmail(username).then((authData) => {
-      authData && authData.active && passwordHash.verify(password, authData.password) ?
-        done(null, authData) : done(null, false);
-    }).catch(done);
+      if (authData && authData.active) {
+        const passwordValid = passwordHash.verify(password, authData.password);
+        
+        if (passwordValid) {
+          done(null, authData);
+        } else {
+          done(null, false);
+        }
+      } else {
+        done(null, false);
+      }
+    }).catch((error) => {
+      done(error);
+    });
   });
 
 export const logout = function (req, res, next) {

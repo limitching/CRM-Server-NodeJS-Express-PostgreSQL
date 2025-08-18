@@ -5,9 +5,7 @@ import passwordHash from 'password-hash';
 import passwordGenerator from 'generate-password';
 import roleModel from './role-model.js';
 
-import database from '../database.js';
-const sequelize = database.sequelize;
-const Sequelize = database.Sequelize;
+import { sequelize, Sequelize } from '../database.js';
 
 import { validator, ContainerModel, error } from '../core/index.js';
 const ValidationError = error.ValidationError;
@@ -77,7 +75,7 @@ const MODEL_OPTIONS = {
 class UserModel extends ContainerModel {
 
   constructor() {
-    super('users', ['id', 'username', 'email', 'phone', 'firstName', 'lastName', 'displayName', 'active', 'department_id', 'wide_menu', 'image', 'address_id', 'date_of_birth', 'hire_date', 'termination_date']);
+    super('users', ['id', 'username', 'email', 'phone', 'firstName', 'lastName', 'displayName', 'password', 'active', 'department_id', 'wide_menu', 'image', 'address_id', 'date_of_birth', 'hire_date', 'termination_date']);
     this.buildModel(MODEL_ATTRIBUTES, MODEL_OPTIONS);
     this.createBelongsToManyAssociation('roles', 'user_roles', 'user_id', roleModel.sequelizeModel, ['id']);
   }
@@ -158,7 +156,24 @@ class UserModel extends ContainerModel {
       } else {
         resolve();
       }
-    }).then(() => super.save(user, transaction));
+    }).then(() => {
+      // 直接使用 Sequelize 的 create 或 update 方法，繞過 ContainerModel.save
+      if (user.id) {
+        // 更新現有用戶
+        return this.sequelizeModel.update(user, {
+          where: {id: user.id},
+          transaction: transaction
+        }).then(() => user);
+      } else {
+        // 創建新用戶
+        return this.sequelizeModel.create(user, {
+          transaction: transaction
+        }).then((createdUser) => {
+          user.id = createdUser.id;
+          return user;
+        });
+      }
+    });
   }
 
   loadRolesByUserId(id, transaction) {
@@ -182,6 +197,7 @@ class UserModel extends ContainerModel {
       ._findByUserNameOrEmail(['id', 'password', 'active'], usernameOrEmail, transaction)
       .then((user) => {
         user = this.getSequelizeInstanceValues(user);
+        
         let res = user;
         if (user) {
           res = this
@@ -209,6 +225,11 @@ class UserModel extends ContainerModel {
     return this.sequelizeModel.update(user, {where: {id: id}, transaction: transaction});
   }
 
+  activateUserWithoutPassword(id, expires, transaction) {
+    let user = {active: true, expires: expires};
+    return this.sequelizeModel.update(user, {where: {id: id}, transaction: transaction});
+  }
+
   deactivateUser(id, transaction) {
     return this.sequelizeModel.update({active: false, expires: null}, {
       where: {id: id},
@@ -220,7 +241,7 @@ class UserModel extends ContainerModel {
     return this.sequelizeModel.findAll({
       attributes: this.fields,
       where: {expires: {lt: new Date()}},
-      order: 'expires',
+      order: [['expires', 'ASC']],
       limit: limit,
       transaction: transaction
     });

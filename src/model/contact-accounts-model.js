@@ -1,7 +1,7 @@
 'use strict';
 
-import database from '../database.js';
-const Sequelize = database.Sequelize;
+import { sequelize, Sequelize } from '../database.js';
+
 
 import { ContainerModel } from '../core/index.js';
 import contactModel from './contact-model.js';
