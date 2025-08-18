@@ -23,12 +23,15 @@ export interface User {
   roles: Role[];
   avatar?: string;
   expires?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface Role {
   id: number;
   name: string;
   permissions: Permission[];
+  description?: string;
 }
 
 export interface Permission {
@@ -92,6 +95,8 @@ export interface Department {
   id: number;
   name: string;
   description?: string;
+  parent_id?: number;
+  children?: Department[];
 }
 
 // Reminder Types
@@ -105,4 +110,70 @@ export interface Reminder {
   user_id: number;
   created_at: Date;
   updated_at: Date;
+}
+
+// Social Network Types
+export interface SocialNetwork {
+  id: number;
+  name: string;
+  url?: string;
+  description?: string;
+}
+
+// Create/Update Request Types
+export interface AccountCreateRequest {
+  company_name: string;
+  industry?: string;
+  status?: string;
+}
+
+export interface AccountUpdateRequest extends AccountCreateRequest {
+  id?: number;
+}
+
+export interface ContactCreateRequest {
+  first_name: string;
+  last_name: string;
+  email?: string;
+  phone?: string;
+  position?: string;
+  accounts?: number[];
+}
+
+export interface ContactUpdateRequest extends ContactCreateRequest {
+  id?: number;
+}
+
+export interface OpportunityCreateRequest {
+  name: string;
+  value: number;
+  currency: 'USD' | 'EUR';
+  probability: number;
+  status_id: number;
+  user_id: number;
+  company_id: number;
+  expected_close_date: Date;
+  order?: number;
+  is_active?: boolean;
+  notify_users?: string;
+}
+
+export interface OpportunityUpdateRequest extends OpportunityCreateRequest {
+  id?: number;
+}
+
+export interface UserCreateRequest {
+  username: string;
+  email: string;
+  password: string;
+  active?: boolean;
+  roles?: number[];
+}
+
+export interface UserUpdateRequest {
+  username?: string;
+  email?: string;
+  password?: string;
+  active?: boolean;
+  roles?: number[];
 }

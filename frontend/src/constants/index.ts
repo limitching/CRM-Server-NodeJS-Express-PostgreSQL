@@ -50,6 +50,7 @@ export const API_CONFIG = {
       ALL: '/rest/status/all',
       SAVE: '/rest/status/save',
       REMOVE: '/rest/status/remove',
+      REORDER: '/rest/status/reorder',
     },
     DEPARTMENTS: {
       ALL: '/rest/department/all',
@@ -60,6 +61,11 @@ export const API_CONFIG = {
       ALL: '/rest/reminder/all',
       SAVE: '/rest/reminder/save',
       REMOVE: '/rest/reminder/remove',
+    },
+    SOCIAL_NETWORKS: {
+      ALL: '/rest/socialNetwork/all',
+      SAVE: '/rest/socialNetwork/save',
+      REMOVE: '/rest/socialNetwork/remove',
     },
   },
 } as const;
