@@ -1,3 +1,44 @@
+# CRM Server Node.js Express PostgreSQL
+
+A comprehensive CRM server built with Node.js, Express, and PostgreSQL, featuring both backend API services and a modern frontend interface.
+
+## New Features
+
+### Cursor Rules & Development Standards
+This project now includes Cursor IDE rules for consistent development practices:
+- **Code Style & Standards**: ES6+ JavaScript, RESTful API design, proper error handling
+- **Documentation Standards**: Automatic documentation sync with code changes
+- **Security & Best Practices**: Environment variable usage, authentication, CRM data handling
+
+### Kiro Hooks Integration
+Automated development workflow with `.kiro` hooks:
+- **Security Scan Pre-commit**: Automated security checks before code commits
+- **Documentation Updates**: Automatic prompts to update docs when code changes
+- **Quality Assurance**: Ensures documentation stays synchronized with codebase
+
+### Frontend UI Components
+Modern frontend interface built with:
+- Responsive design for CRM operations
+- Component-based architecture
+- Built and optimized for production deployment
+
+## Project Structure
+
+```
+├── src/                    # Backend source code
+│   ├── app/               # Application setup and routing
+│   ├── controller/        # API controllers
+│   ├── core/              # Core utilities and models
+│   ├── model/             # Database models
+│   └── mail/              # Email functionality
+├── frontend/              # Frontend application
+│   ├── src/               # Source code
+│   └── dist/              # Built assets
+├── .cursor/               # Cursor IDE rules
+├── .kiro/                 # Development workflow hooks
+└── docs/                  # Project documentation
+```
+
 ### To run server application: ###
 
 1. Install Node.js platform, npm command should be available after that

@@ -1,0 +1,160 @@
+---
+description: "This rule is used to enforce security scanning before commits to prevent sensitive information from being committed to the repository."
+alwaysApply: false
+---
+# Security Pre-Commit Scanner Rule
+
+## Overview
+This rule enforces security scanning before commits to prevent sensitive information from being committed to the repository.
+
+## Automated Security Checking
+This rule now integrates with automated pre-commit compliance checking:
+
+### Git Pre-Commit Hook Integration
+- **Automatic Security Verification**: Pre-commit hook automatically checks security hook availability
+- **File Pattern Monitoring**: Automatically detects files that require security scanning
+- **Compliance Validation**: Ensures security rules are properly configured before commits
+
+### .kiro Hook Integration
+This rule works in conjunction with the `.kiro/hooks/security-scan-precommit.kiro.hook` file, which provides detailed scanning instructions and patterns.
+
+## Security Requirements
+
+### What to Scan For
+- API keys, tokens, or credentials in source code
+- Private keys or sensitive credentials
+- Encryption keys or certificates
+- Authentication tokens or session IDs
+- Passwords or secrets in configuration files
+- Database connection credentials
+- Mail server credentials
+- Hardcoded internal URLs or endpoints
+- Environment variable exposure
+- SQL injection vulnerabilities
+
+### Security Standards
+- Follow OWASP security guidelines
+- Ensure customer data protection
+- Maintain API endpoint security
+- Implement proper database access controls
+- Secure email service configuration
+- Proper session management
+- Input validation and sanitization
+
+### File Patterns to Monitor
+- JavaScript/TypeScript files (*.js, *.ts)
+- Configuration files (*.json, .env*)
+- Documentation (*.md)
+- Database files (*.sql)
+- Infrastructure files (Dockerfile, docker-compose.yml)
+- Package files (package.json, package-lock.json)
+
+## Implementation
+When this rule is triggered, it will:
+1. **Automated Detection**: Pre-commit hook automatically identifies security-relevant files
+2. **Security Scanning**: Scan changed files for security vulnerabilities
+3. **Risk Assessment**: Highlight specific security risks found
+4. **Secure Alternatives**: Suggest secure alternatives and best practices
+5. **Compliance Verification**: Confirm code security or suggest improvements
+
+## Pre-Commit Security Workflow
+1. **Automatic Trigger**: Pre-commit hook runs security checks
+2. **File Analysis**: Identifies files requiring security review
+3. **Hook Validation**: Ensures security hooks are available
+4. **Manual Review**: Prompts for manual security hook execution if needed
+5. **Compliance Check**: Verifies security standards are met
+
+## Best Practices
+- **Automated Checks**: Always run pre-commit security verification
+- **Environment Variables**: Use environment variables for sensitive configuration
+- **Secret Management**: Implement proper secret management systems
+- **Least Privilege**: Follow the principle of least privilege
+- **Regular Audits**: Conduct regular security audits and updates
+- **Team Training**: Ensure secure coding practices for all team members
+
+## Compliance Requirements
+Before each commit, ensure:
+- [ ] **Security Hook Available**: Security scanning hook is properly configured
+- [ ] **No Sensitive Data**: No hardcoded secrets or credentials
+- [ ] **Environment Variables**: Sensitive config uses environment variables
+- [ ] **Input Validation**: Proper input validation and sanitization
+- [ ] **Authentication**: Secure authentication and authorization
+- [ ] **Data Protection**: Customer data protection measures in place
+# Security Pre-Commit Scanner Rule
+
+## Overview
+This rule enforces security scanning before commits to prevent sensitive information from being committed to the repository.
+
+## Automated Security Checking
+This rule now integrates with automated pre-commit compliance checking:
+
+### Git Pre-Commit Hook Integration
+- **Automatic Security Verification**: Pre-commit hook automatically checks security hook availability
+- **File Pattern Monitoring**: Automatically detects files that require security scanning
+- **Compliance Validation**: Ensures security rules are properly configured before commits
+
+### .kiro Hook Integration
+This rule works in conjunction with the `.kiro/hooks/security-scan-precommit.kiro.hook` file, which provides detailed scanning instructions and patterns.
+
+## Security Requirements
+
+### What to Scan For
+- API keys, tokens, or credentials in source code
+- Private keys or sensitive credentials
+- Encryption keys or certificates
+- Authentication tokens or session IDs
+- Passwords or secrets in configuration files
+- Database connection credentials
+- Mail server credentials
+- Hardcoded internal URLs or endpoints
+- Environment variable exposure
+- SQL injection vulnerabilities
+
+### Security Standards
+- Follow OWASP security guidelines
+- Ensure customer data protection
+- Maintain API endpoint security
+- Implement proper database access controls
+- Secure email service configuration
+- Proper session management
+- Input validation and sanitization
+
+### File Patterns to Monitor
+- JavaScript/TypeScript files (*.js, *.ts)
+- Configuration files (*.json, .env*)
+- Documentation (*.md)
+- Database files (*.sql)
+- Infrastructure files (Dockerfile, docker-compose.yml)
+- Package files (package.json, package-lock.json)
+
+## Implementation
+When this rule is triggered, it will:
+1. **Automated Detection**: Pre-commit hook automatically identifies security-relevant files
+2. **Security Scanning**: Scan changed files for security vulnerabilities
+3. **Risk Assessment**: Highlight specific security risks found
+4. **Secure Alternatives**: Suggest secure alternatives and best practices
+5. **Compliance Verification**: Confirm code security or suggest improvements
+
+## Pre-Commit Security Workflow
+1. **Automatic Trigger**: Pre-commit hook runs security checks
+2. **File Analysis**: Identifies files requiring security review
+3. **Hook Validation**: Ensures security hooks are available
+4. **Manual Review**: Prompts for manual security hook execution if needed
+5. **Compliance Check**: Verifies security standards are met
+
+## Best Practices
+- **Automated Checks**: Always run pre-commit security verification
+- **Environment Variables**: Use environment variables for sensitive configuration
+- **Secret Management**: Implement proper secret management systems
+- **Least Privilege**: Follow the principle of least privilege
+- **Regular Audits**: Conduct regular security audits and updates
+- **Team Training**: Ensure secure coding practices for all team members
+
+## Compliance Requirements
+Before each commit, ensure:
+- [ ] **Security Hook Available**: Security scanning hook is properly configured
+- [ ] **No Sensitive Data**: No hardcoded secrets or credentials
+- [ ] **Environment Variables**: Sensitive config uses environment variables
+- [ ] **Input Validation**: Proper input validation and sanitization
+- [ ] **Authentication**: Secure authentication and authorization
+- [ ] **Data Protection**: Customer data protection measures in place
