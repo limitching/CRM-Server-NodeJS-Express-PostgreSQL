@@ -1,3 +1,81 @@
+---
+alwaysApply: false
+description: "This rule is used to update the documentation on code change."
+---
+# CRM Server Node.js Express PostgreSQL - Project Rules
+
+## Project Overview
+This is a CRM server built with Node.js, Express, and PostgreSQL. The project includes both backend API services and a frontend interface.
+
+## Code Style & Standards
+- Use ES6+ JavaScript features
+- Follow RESTful API design principles
+- Implement proper error handling and validation
+- Use async/await for asynchronous operations
+- Follow the existing project structure and naming conventions
+
+## Documentation Standards
+- Keep documentation in sync with code changes
+- Update README.md when adding new features or changing existing functionality
+- Document API endpoints, database models, and configuration options
+- Use clear and comprehensive descriptions for CRM system features
+
+## Automated Compliance Checking
+This project now includes automated cursor rules compliance checking:
+
+### Git Pre-Commit Hook
+- **Automatic Trigger**: Runs before every `git commit`
+- **File Validation**: Checks if relevant files trigger appropriate rules
+- **Documentation Check**: Verifies documentation updates for code changes
+- **Security Verification**: Ensures security hooks are available
+- **Rule Compliance**: Validates all cursor rules are properly configured
+
+### .kiro Hooks Integration
+This project uses .kiro hooks to automatically prompt for documentation updates when code changes occur. The hooks are located in `.kiro/hooks/` and will trigger when:
+- JavaScript source files are modified
+- Configuration files change
+- Package dependencies are updated
+- Database models or schemas are altered
+
+When prompted by .kiro hooks, ensure you:
+1. Analyze the code changes thoroughly
+2. Update relevant documentation sections
+3. Maintain consistency with existing documentation style
+4. Consider the impact on API users and system administrators
+
+## Development Workflow
+- **Pre-Commit Checks**: Always run automated cursor rules compliance checks
+- **Documentation Updates**: Update docs for any code changes
+- **Testing**: Test changes thoroughly before committing
+- **Environment Config**: Update environment configuration examples if needed
+- **Database Docs**: Ensure database migrations are properly documented
+- **Frontend/Backend Sync**: Keep frontend and backend documentation synchronized
+
+## Security & Best Practices
+- Never commit sensitive information like API keys or passwords
+- Use environment variables for configuration
+- Implement proper authentication and authorization
+- Follow security best practices for CRM data handling
+
+## Compliance Checklist
+Before each commit, ensure you've completed:
+- [ ] **Automated Checks**: Pre-commit hook has run successfully
+- [ ] **Documentation**: Updated relevant docs for code changes
+- [ ] **Code Style**: Followed ES6+ standards and project conventions
+- [ ] **Security**: No hardcoded secrets or security vulnerabilities
+- [ ] **Testing**: Changes thoroughly tested
+- [ ] **Workflow**: All .kiro hooks satisfied
+
+## Manual Rule Triggering
+If automated checks don't cover your specific case, manually trigger:
+- `cursor-rules-precommit.kiro.hook` - Complete compliance verification
+- `security-scan-precommit.kiro.hook` - Security vulnerability scanning
+- `update-docs-on-code-change.kiro.hook` - Documentation update prompts
+
+- Never commit sensitive information like API keys or passwords
+- Use environment variables for configuration
+- Implement proper authentication and authorization
+- Follow security best practices for CRM data handling
 
 # CRM Server Node.js Express PostgreSQL - Project Rules
 
